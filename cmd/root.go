@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"log/slog"
-	"os"
 
 	"github.com/pablo/slack-backbone/config"
 	"github.com/spf13/cobra"

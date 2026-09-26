@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -69,8 +67,8 @@ func (t *Team) Allowed(cmd string) bool {
 	return true
 }
 
-// DefaultChannel returns the team's default notification channel.
-func (t *Team) DefaultChannel() string {
+// GetDefaultChannel returns the team's default notification channel.
+func (t *Team) GetDefaultChannel() string {
 	if t.DefaultChannel != "" {
 		return t.DefaultChannel
 	}
