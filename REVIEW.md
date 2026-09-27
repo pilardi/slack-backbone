@@ -18,6 +18,7 @@
 | `config/config.go::Load()` | ✅ **Done** (PR #6) | Reads YAML config via `v.ReadInConfig()` + `v.Unmarshal()`, `.env`/`.env.local` support via godotenv |
 | `handlers/confirm.go` | ✅ **Done** (PR #7) | Buttons + action callbacks wired via `app.Action()` middleware |
 | `main.go` | ✅ **Done** (PR #9) | Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)` |
+| `Dockerfile` | ✅ **Done** | Multi-stage build: Go builder + alpine runtime with CA certs |
 
 ## ⚠️ Stubbed / Incomplete
 
@@ -32,7 +33,6 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 | Priority | Task | Effort |
 |----------|------|--------|
 | P1 | Implement real deploy logic (or at least a more realistic response) | Small |
-| P4 | Add Dockerfile / multi-stage build | Medium |
 
 ## 📊 Code Stats
 
