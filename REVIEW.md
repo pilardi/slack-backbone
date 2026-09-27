@@ -15,14 +15,15 @@
 | `slack/blocks.go` | ✅ Complete | Block Kit helpers (NewBlocks, SectionBlock, DividerBlock, ActionBlockWithButton) |
 | `.github/workflows/ci.yml` | ✅ Complete | 5 jobs: build, test, lint, format, mod-tidy |
 | `cmd/root.go::run()` | ✅ **Done** (PR #5) | Full wiring: creates Manager per team, registers all handlers on Bolt apps, calls StartAll(), blocks forever |
+| `handlers/confirm.go` | ✅ **Done** (PR #7) | Buttons + action callbacks wired via `app.Action()` middleware |
 
 ## ⚠️ Stubbed / Incomplete
 
 ### 1. `handlers/deploy.go` — **Stub**
 Returns a static `"🚀 Deploying to **production**..."` message. No actual deployment logic.
 
-### 2. `handlers/confirm.go` — **Partial**
-Has button UI (`✅ Confirm` / `❌ Cancel`) but no callback handler for button interactions. The buttons are rendered but never wired to a response action.
+### 2. ~~`handlers/confirm.go`~~ — ✅ **Done (PR #7)**
+Buttons + action callbacks wired via `app.Action()` middleware. Clicking `✅ Confirm` or `❌ Cancel` now produces a confirmation/cancellation message.
 
 ### 3. `main.go` — **Minimal**
 Entry point delegates to `cmd.Execute()`. Could benefit from structured logging setup (custom handler with JSON output).
@@ -32,7 +33,6 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 | Priority | Task | Effort |
 |----------|------|--------|
 | P1 | Implement real deploy logic (or at least a more realistic response) | Small |
-| P1 | Wire confirm button callbacks via Bolt's `ViewSubmission` middleware | Medium |
 | P2 | Add structured JSON logging (slog handler with custom format) | Small |
 | P4 | Add Dockerfile / multi-stage build | Medium |
 
@@ -42,14 +42,15 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 - **Lines of code (excl. tests):** ~500
 - **Test coverage (handlers):** 10/10 tests passing
 - **Files with TODOs:** `config/config.go` (resolved in this PR)
-- **Handlers remaining as stubs:** deploy, confirm
+- **Handlers remaining as stubs:** deploy
 
 ## 🔍 Notable Gaps
 
 1. **✅ Resolved:** Command dispatching now works — all 4 handlers are registered on each team's Bolt app via `app.Command()`.
 2. **✅ Resolved:** Config file parsing is now wired — `v.ReadInConfig()` + `v.Unmarshal()` properly load the YAML config.
 3. **✅ Resolved:** `.env` file support added via `godotenv` — reads `.env` and `.env.local` files (YAML config takes final priority).
-4. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
+4. **✅ Resolved:** Confirm button callbacks wired via `app.Action()` middleware.
+5. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
 
 ## 📊 Code Stats
 
@@ -57,7 +58,7 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 - **Lines of code (excl. tests):** ~500
 - **Test coverage (handlers):** 10/10 tests passing
 - **Files with TODOs:** `config/config.go`
-- **Handlers remaining as stubs:** deploy, confirm
+- **Handlers remaining as stubs:** deploy
 
 ## 🔍 Notable Gaps
 

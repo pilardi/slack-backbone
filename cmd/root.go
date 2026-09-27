@@ -82,6 +82,10 @@ func registerHandlers(app *bolt.App, ctx context.Context, client *slackpkg.Clien
 	app.Command("status", adaptHandler(ctx, handlers.NewStatusHandler(client), team))
 	app.Command("deploy", adaptHandler(ctx, &handlers.DeployHandler{}, team))
 	app.Command("confirm", adaptHandler(ctx, &handlers.ConfirmHandler{}, team))
+
+	// Wire up button callbacks for confirm handler
+	app.Action(bolt.ActionConstraints{ActionID: "confirmed"}, confirmCallback(team.Name, true))
+	app.Action(bolt.ActionConstraints{ActionID: "cancelled"}, confirmCallback(team.Name, false))
 }
 
 // adaptHandler converts a Handler into Bolt's Command middleware signature.
@@ -102,5 +106,18 @@ func adaptHandler(ctx context.Context, h handlers.Handler, team config.Team) fun
 		return args.Ack(&bolt.CommandResponse{
 			Blocks: blocks.BlockSet,
 		})
+	}
+}
+
+// confirmCallback returns a Bolt action middleware handler for confirm buttons.
+func confirmCallback(teamName string, confirmed bool) func(args bolt.SlackActionMiddlewareArgs) error {
+	return func(args bolt.SlackActionMiddlewareArgs) error {
+		status := "confirmed"
+		if !confirmed {
+			status = "cancelled"
+		}
+		text := fmt.Sprintf("✅ **%s!** · Team: **%s**", status, teamName)
+		resp := interface{}(text)
+		return args.Ack(&resp)
 	}
 }

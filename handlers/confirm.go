@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/pilardi/slack-backbone/config"
 	"github.com/slack-go/slack"
@@ -36,4 +37,17 @@ func confirmButton(teamName string) *slack.ActionBlock {
 			Value: "cancelled",
 		},
 	)
+}
+
+// ConfirmResponse builds a response block for the confirm action.
+func ConfirmResponse(teamName string, confirmed bool) *slack.Blocks {
+	status := "✅ **Confirmed!**"
+	if !confirmed {
+		status = "❌ **Cancelled.**"
+	}
+	return &slack.Blocks{
+		BlockSet: []slack.Block{
+			slack.NewSectionBlock(&slack.TextBlockObject{Type: "mrkdwn", Text: fmt.Sprintf("%s · Team: **%s**", status, teamName)}, nil, nil),
+		},
+	}
 }
