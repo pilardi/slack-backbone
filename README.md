@@ -96,6 +96,7 @@ This project was built with the help of several tools and services:
 - **[Berd](https://github.com/block/berd/)** — the desktop app where this conversation took place, providing a rich interface for working with agents.
 - **[Goose](https://github.com/goose),** the coding agent used to design, implement, and review all changes in this project.
 - **Unsloth Studio** ([unslothai/unsloth](https://github.com/unslothai/unsloth)) — the inference engine powering the LLM used during development.
+- **llama.cpp** ([ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp)) — the inference engine that powers Unsloth Studio's runtime.
 - **Qwen-3.8-35B-A3B** ([Empero AI](https://huggingface.co/empero-ai/Qwen3.8-35B-A3B-Distill-GGUF)) — the model powering this session, running on top of Unsloth Studio's inference engine.
 
 ## License
