@@ -4,12 +4,12 @@ A multi-team Slack socket-mode application written in Go. Exposes slash commands
 
 ## Features
 
-- **Socket mode** via `slack-go/bolt` — connects to Slack over WebSocket
+- **Socket mode** via `Asafrose/bolt-go` — connects to Slack over WebSocket
 - **Multi-team support** — one binary, N concurrent workspaces
 - **Slash commands** with Block Kit rich layouts
 - **Configurable per-team**: allowed/restricted commands, default channels
-- **Structured logging** via `slog`
-- **Go 1.24+** only
+- **Structured JSON logging** via `slog.NewJSONHandler`
+- **Go 1.25+** only
 
 ## Quick Start
 
@@ -17,9 +17,9 @@ A multi-team Slack socket-mode application written in Go. Exposes slash commands
 # 1. Install dependencies
 go mod tidy
 
-# 2. Set up your tokens (see .env.example)
-cp .env.example .env
-# Edit .env with your actual bot and app tokens
+# 2. Copy the example config and edit tokens
+cp teams.yaml.example teams.yaml
+# Edit teams.yaml with your actual bot_token and app_token per team
 
 # 3. Run locally
 go run . --config teams.yaml
@@ -66,8 +66,11 @@ teams:
 ├── handlers/         # Command handler implementations
 ├── slack/            # Multi-team Bolt manager + API client
 ├── config/           # Config loading (YAML/env)
-├── .env.example      # Template for local dev
-├── Dockerfile        # Container build
+├── .github/workflows/ci.yml  # CI: build, test, lint, format, mod-tidy, docker-build
+├── Dockerfile        # Multi-stage build (golang:1.25-alpine → alpine:3.20)
+├── .dockerignore     # Excludes .git, .github, *.md, .env, logs from build context
+├── teams.yaml.example # Example config for local testing
+├── go.mod / go.sum   # Go module dependencies
 └── README.md
 ```
 
@@ -81,9 +84,9 @@ go run . --log-level debug
 go build -o slack-backbone .
 ./slack-backbone --config teams.yaml --team prod-workspace
 
-# Docker
-docker build -t slack-backbone .
-docker run -e SLACK_BOT_TOKEN=xoxb-... -e SLACK_APP_TOKEN=xapp-... slack-backbone
+# Docker (CI builds and tags with commit SHA)
+docker build -t slack-backbone:${{ github.sha }} .
+docker run --rm slack-backbone:${{ github.sha }} --log-level debug
 ```
 
 ## Acknowledgments
