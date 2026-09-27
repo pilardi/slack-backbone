@@ -45,6 +45,8 @@ func runMCP(ctx context.Context) error {
 
 	srv.InitClients()
 	mcp.RegisterTools(srv)
+	mcp.RegisterResources(srv)
+	mcp.RegisterPrompts(srv)
 
 	httpPort, _ := rootCmd.Flags().GetInt("http-port")
 
