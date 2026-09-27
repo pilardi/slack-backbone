@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -37,7 +35,7 @@ func Load() (*Config, error) {
 	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 
 	// Bind known keys from env
-	v.BindEnv("config", "CONFIG_FILE")
+	_ = v.BindEnv("config", "CONFIG_FILE")
 
 	return nil, nil
 }
@@ -45,7 +43,7 @@ func Load() (*Config, error) {
 // BindFlags registers config keys with a Cobra command.
 func BindFlags(cmd *cobra.Command) {
 	cmd.Flags().String("log-level", "info", "Log level: debug|info|warn|error")
-	viper.BindPFlag("log_level", cmd.Flags().Lookup("log-level"))
+	_ = viper.BindPFlag("log_level", cmd.Flags().Lookup("log-level"))
 }
 
 // Allowed returns true if the command is allowed for this team.
@@ -69,8 +67,8 @@ func (t *Team) Allowed(cmd string) bool {
 	return true
 }
 
-// DefaultChannel returns the team's default notification channel.
-func (t *Team) DefaultChannel() string {
+// GetDefaultChannel returns the team's default notification channel.
+func (t *Team) GetDefaultChannel() string {
 	if t.DefaultChannel != "" {
 		return t.DefaultChannel
 	}

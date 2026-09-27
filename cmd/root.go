@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"log/slog"
-	"os"
 
 	"github.com/pablo/slack-backbone/config"
 	"github.com/spf13/cobra"
@@ -21,7 +20,10 @@ channels about events.`,
 }
 
 func Execute(ctx context.Context, logger *slog.Logger) error {
-	return rootCmd.ExecuteContext(ctx)
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		return err
+	}
+	return nil
 }
 
 func init() {
