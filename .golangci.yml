@@ -13,8 +13,9 @@ linters:
     - unused
 
 issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - govet
-        - unused
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - govet
+          - unused
