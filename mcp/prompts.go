@@ -64,7 +64,7 @@ func makeSummarizeHandler() mcp.PromptHandler {
 		return &mcp.GetPromptResult{
 			Messages: []*mcp.PromptMessage{
 				{
-					Role:    "user",
+					Role: "user",
 					Content: &mcp.TextContent{Text: fmt.Sprintf(
 						"Please summarize the last %d messages from #%s in team %q.", count, channel, team,
 					)},
@@ -88,7 +88,7 @@ func makeAlertHandler() mcp.PromptHandler {
 		return &mcp.GetPromptResult{
 			Messages: []*mcp.PromptMessage{
 				{
-					Role:    "user",
+					Role: "user",
 					Content: &mcp.TextContent{Text: fmt.Sprintf(
 						"Watch for the keyword '%s' in #%s (team %q). When found, notify the user with a brief excerpt.",
 						keyword, channel, team,
@@ -112,7 +112,7 @@ func makeStatusHandler() mcp.PromptHandler {
 		return &mcp.GetPromptResult{
 			Messages: []*mcp.PromptMessage{
 				{
-					Role:    "user",
+					Role: "user",
 					Content: &mcp.TextContent{Text: fmt.Sprintf(
 						"Generate a concise daily status report for team %q and post it to #%s.", team, channel,
 					)},

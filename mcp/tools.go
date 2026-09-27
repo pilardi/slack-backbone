@@ -17,7 +17,7 @@ var _ = (*slackpkg.Client)(nil) // satisfy import checker
 // ---- Argument structs (auto-inferred as JSON Schema) ----
 
 type postArgs struct {
-	Team   string `json:"team" jsonschema:"^$" jsonschema_description:"Team/workspace name from config"`
+	Team    string `json:"team" jsonschema:"^$" jsonschema_description:"Team/workspace name from config"`
 	Channel string `json:"channel" jsonschema:"^$" jsonschema_description:"Channel name (e.g. '#general') or user ID for DMs"`
 	Text    string `json:"text,omitempty" jsonschema_description:"Plain text message body"`
 }
@@ -25,7 +25,7 @@ type postArgs struct {
 type notifyArgs struct {
 	Team   string `json:"team" jsonschema:"^$" jsonschema_description:"Team/workspace name from config"`
 	UserID string `json:"user_id" jsonschema:"^$" jsonschema_description:"Slack user ID (e.g. 'U0123ABCD')"`
-	Text    string `json:"text" jsonschema:"^$" jsonschema_description:"Plain text message body"`
+	Text   string `json:"text" jsonschema:"^$" jsonschema_description:"Plain text message body"`
 }
 
 type statusArgs struct {
