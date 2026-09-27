@@ -20,7 +20,7 @@
 | `main.go` | ✅ **Done** (PR #9) | Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)` |
 | `Dockerfile` | ✅ **Done** (PR #10) | Multi-stage build (`golang:1.25-alpine` → `alpine:3.20` runtime) |
 | `.dockerignore` | ✅ **Done** (PR #10) | Excludes .git, .github, *.md, .env, logs from build context |
-| `.github/workflows/ci.yml` | ✅ **Done** (PR #10) | Added `docker-build` job: builds image + runs `--help` smoke test |
+| `.github/workflows/ci.yml` | ✅ **Done** (PR #10) | `docker/build-push-action@v6` with commit SHA tagging (`slack-backbone:${{ github.sha }}`) + `--help` smoke test |
 | `config/config.go::BindFlags` | ✅ **Done** (PR #10) | Removed duplicate `--log-level` flag definition (was causing panic on `--help`) |
 
 ## ⚠️ Stubbed / Incomplete
