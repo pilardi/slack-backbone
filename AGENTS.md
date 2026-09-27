@@ -74,11 +74,14 @@ Agents interact via the MCP server (stdio or streamable HTTP transport):
 
 ## Environment Variables
 
+The app reads `.env` and `.env.local` files at startup, then merges with environment variables. Precedence: env vars > `.env.local` > `.env` > `teams.yaml` > defaults.
+
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `SLACK_BOT_TOKEN` | Yes | Bot token (`xoxb-...`) per team |
-| `SLACK_APP_TOKEN` | Yes | App-level token (`xapp-...`) per team |
-| `SLACK_BACKBONE_LOG_LEVEL` | No | `debug`, `info`, `warn`, `error` (default: `info`) |
+| `SLACK_BACKBONE_LOG_LEVEL` | No | Log verbosity: `debug`, `info`, `warn`, `error` (default: `info`) |
+| `SLACK_BACKBONE_CONFIG_FILE` | No | Path to config file (overrides `--config` flag) |
+
+> **Token configuration** is primarily handled via `teams.yaml`. The global token vars (`SLACK_BOT_TOKEN`, `SLACK_APP_TOKEN`) in `.env` are read but the primary per-team tokens come from the YAML config.
 
 ## CLI Flags
 

@@ -70,6 +70,37 @@ slack-backbone --mode mcp --http-port 8080 --config teams.yaml
 
 ## Configuration
 
+The application supports multiple configuration sources, layered by precedence (higher overrides lower):
+
+1. **CLI flags** (highest priority) — `--config`, `--team`, `--log-level`
+2. **Environment variables** — prefixed with `SLACK_BACKBONE_`
+3. **`.env.local`** — developer-specific overrides (gitignored)
+4. **`.env`** — shared environment file (gitignored)
+5. **`teams.yaml`** — primary config file
+6. **Defaults** — lowest priority
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `SLACK_BACKBONE_LOG_LEVEL` | Log verbosity: `debug`, `info`, `warn`, `error` (default: `info`) |
+| `SLACK_BACKBONE_CONFIG_FILE` | Path to config file (overrides `--config` flag) |
+
+### `.env` Files
+
+Copy `.env.example` and edit tokens for your workspace:
+
+```bash
+cp .env.example .env
+# Edit .env with your actual bot_token and app_token
+```
+
+The app reads `.env` and `.env.local` (local overrides) at startup via `godotenv`. These are useful for machine-specific settings like API tokens or custom config paths.
+
+> **Note:** Global token vars (`SLACK_BOT_TOKEN`, `SLACK_APP_TOKEN`) in `.env` are read but the primary per-team configuration comes from `teams.yaml`. Use `teams.yaml` for team-specific tokens and `.env` for global defaults or overrides.
+
+### Primary Config (`teams.yaml`)
+
 Create a `teams.yaml` file:
 
 ```yaml
