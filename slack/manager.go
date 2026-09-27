@@ -21,19 +21,19 @@ func NewManager() *Manager {
 	}
 }
 
-// Register adds a team's Bolt app to the manager.
-func (m *Manager) Register(ctx context.Context, team config.Team) error {
+// Register adds a team's Bolt app to the manager and returns it.
+func (m *Manager) Register(ctx context.Context, team config.Team) (*bolt.App, error) {
 	app, err := bolt.New(bolt.AppOptions{
 		Token:      team.BotToken,
 		AppToken:   team.AppToken,
 		SocketMode: true,
 	})
 	if err != nil {
-		return fmt.Errorf("failed to create Bolt app for team %q: %w", team.Name, err)
+		return nil, fmt.Errorf("failed to create Bolt app for team %q: %w", team.Name, err)
 	}
 
 	m.apps[team.Name] = app
-	return nil
+	return app, nil
 }
 
 // StartAll starts listening on all registered teams.
