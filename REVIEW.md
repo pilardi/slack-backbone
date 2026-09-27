@@ -32,7 +32,6 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 | Priority | Task | Effort |
 |----------|------|--------|
 | P1 | Implement real deploy logic (or at least a more realistic response) | Small |
-| P2 | Add structured JSON logging (slog handler with custom format) | Small |
 | P4 | Add Dockerfile / multi-stage build | Medium |
 
 ## 📊 Code Stats
