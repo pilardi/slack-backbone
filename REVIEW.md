@@ -23,6 +23,7 @@
 | `.github/workflows/ci.yml` | ✅ **Done** (PR #10) | `docker/build-push-action@v6` with commit SHA tagging (`slack-backbone:${{ github.sha }}`) + startup smoke test against same image (`--log-level debug` for 5s) |
 | `config/config.go::BindFlags` | ✅ **Done** (PR #10) | Removed duplicate `--log-level` flag definition (was causing panic on `--help`) |
 
+
 ## ⚠️ Stubbed / Incomplete
 
 ### 1. `handlers/deploy.go` — **Stub**
