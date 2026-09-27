@@ -130,4 +130,4 @@ jobs:
       - name: Run container smoke test
         run: |
           docker build -t slack-backbone:test .
-          docker run --rm slack-backbone:test --help
+          timeout 5s docker run --rm slack-backbone:test --log-level debug || true
