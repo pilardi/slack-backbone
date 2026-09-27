@@ -21,14 +21,12 @@ teams:
   - name: "prod-workspace"
     bot_token: "xoxb-..."
     app_token: "xapp-..."
-    default_channel: "#ops-notifications"
     commands: all
     restricted_commands: []
 
   - name: "staging-workspace"
     bot_token: "xoxb-..."
     app_token: "xapp-..."
-    default_channel: "#deployments"
     commands: all
     restricted_commands: [status]
 ```
@@ -46,7 +44,7 @@ teams:
 
 - **Immediate reply** — fast commands return a Block Kit message directly.
 - **Ephemeral message** — sensitive info shown only to the triggering user.
-- **Async callback** — long-running ops post a result later to `default_channel`.
+- **Async callback** — long-running ops post a result later to the originating channel.
 
 ## Environment Variables
 
