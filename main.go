@@ -14,6 +14,9 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
+	// Configure structured JSON logging for production use
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
+
 	logger := slog.Default()
 
 	if err := cmd.Execute(ctx, logger); err != nil {

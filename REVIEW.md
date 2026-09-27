@@ -17,6 +17,7 @@
 | `cmd/root.go::run()` | ✅ **Done** (PR #5) | Full wiring: creates Manager per team, registers all handlers on Bolt apps, calls StartAll(), blocks forever |
 | `config/config.go::Load()` | ✅ **Done** (PR #6) | Reads YAML config via `v.ReadInConfig()` + `v.Unmarshal()`, `.env`/`.env.local` support via godotenv |
 | `handlers/confirm.go` | ✅ **Done** (PR #7) | Buttons + action callbacks wired via `app.Action()` middleware |
+| `main.go` | ✅ **Done** (PR #9) | Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)` |
 
 ## ⚠️ Stubbed / Incomplete
 
@@ -31,7 +32,6 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 | Priority | Task | Effort |
 |----------|------|--------|
 | P1 | Implement real deploy logic (or at least a more realistic response) | Small |
-| P2 | Add structured JSON logging (slog handler with custom format) | Small |
 | P4 | Add Dockerfile / multi-stage build | Medium |
 
 ## 📊 Code Stats
@@ -44,4 +44,4 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 
 ## 🔍 Notable Gaps
 
-1. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
+_No unresolved gaps remaining._
