@@ -101,4 +101,4 @@ This project was built with the help of several tools and services:
 
 ## License
 
-MIT
+This project is licensed under the [MIT License](LICENSE).
