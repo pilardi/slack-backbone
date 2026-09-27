@@ -17,7 +17,7 @@ func TestHandleChannels(t *testing.T) {
 	srv, _ := NewServer(cfg, slog.Default())
 	srv.InitClients()
 
-	result, err := makeChannelsHandler(srv)(context.Background(), &mcp.ReadResourceRequest{
+	_, err := makeChannelsHandler(srv)(context.Background(), &mcp.ReadResourceRequest{
 		Params: &mcp.ReadResourceParams{URI: "slack://channels/test"},
 	})
 	if err != nil {
