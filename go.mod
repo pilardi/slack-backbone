@@ -1,6 +1,6 @@
 module github.com/pablo/slack-backbone
 
-go 1.24
+go 1.25.0
 
 require (
 	github.com/Asafrose/bolt-go v0.0.0-20250917133633-320618296e8b
