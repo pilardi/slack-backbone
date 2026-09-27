@@ -48,7 +48,8 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 
 1. **✅ Resolved:** Command dispatching now works — all 4 handlers are registered on each team's Bolt app via `app.Command()`.
 2. **✅ Resolved:** Config file parsing is now wired — `v.ReadInConfig()` + `v.Unmarshal()` properly load the YAML config.
-3. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
+3. **✅ Resolved:** `.env` file support added via `godotenv` — reads `.env` and `.env.local` files (YAML config takes final priority).
+4. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
 
 ## 📊 Code Stats
 
