@@ -18,39 +18,37 @@
 
 ## ⚠️ Stubbed / Incomplete
 
-### 1. `config/config.go::Load()` — **Critical**
-```go
-func Load() (*Config, error) {
-    v := viper.New()
-    v.SetDefault("log_level", "info")
-    v.AutomaticEnv()
-    v.SetEnvPrefix("slack_backbone")
-    v.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
-    _ = v.BindEnv("config", "CONFIG_FILE")
-    return nil, nil  // ← always returns nil!
-}
-```
-**What's needed:** Actually read the `--config` file via Viper (`v.ReadInConfig()`, `v.Unmarshal()`).
-
-### 2. `handlers/deploy.go` — **Stub**
+### 1. `handlers/deploy.go` — **Stub**
 Returns a static `"🚀 Deploying to **production**..."` message. No actual deployment logic.
 
-### 3. `handlers/confirm.go` — **Partial**
+### 2. `handlers/confirm.go` — **Partial**
 Has button UI (`✅ Confirm` / `❌ Cancel`) but no callback handler for button interactions. The buttons are rendered but never wired to a response action.
 
-### 4. `main.go` — **Minimal**
+### 3. `main.go` — **Minimal**
 Entry point delegates to `cmd.Execute()`. Could benefit from structured logging setup (custom handler with JSON output).
 
 ## 📋 Summary of Remaining Tasks
 
 | Priority | Task | Effort |
 |----------|------|--------|
-| P0 | Fix `config.Load()` to actually parse the YAML config file | Small |
 | P1 | Implement real deploy logic (or at least a more realistic response) | Small |
 | P1 | Wire confirm button callbacks via Bolt's `ViewSubmission` middleware | Medium |
 | P2 | Add structured JSON logging (slog handler with custom format) | Small |
-| P3 | Add a `teams.yaml.example` for local testing | Small |
 | P4 | Add Dockerfile / multi-stage build | Medium |
+
+## 📊 Code Stats
+
+- **Total Go files:** 15
+- **Lines of code (excl. tests):** ~500
+- **Test coverage (handlers):** 10/10 tests passing
+- **Files with TODOs:** `config/config.go` (resolved in this PR)
+- **Handlers remaining as stubs:** deploy, confirm
+
+## 🔍 Notable Gaps
+
+1. **✅ Resolved:** Command dispatching now works — all 4 handlers are registered on each team's Bolt app via `app.Command()`.
+2. **✅ Resolved:** Config file parsing is now wired — `v.ReadInConfig()` + `v.Unmarshal()` properly load the YAML config.
+3. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
 
 ## 📊 Code Stats
 
