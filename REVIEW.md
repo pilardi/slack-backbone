@@ -44,4 +44,5 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 
 ## 🔍 Notable Gaps
 
-1. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
+### 1. ~~`main.go`~~ — ✅ **Done (PR #9)**
+Configured `slog.NewJSONHandler(os.Stdout, nil)` as the default logger — all `slog.Info/Error` calls now produce structured JSON output.
