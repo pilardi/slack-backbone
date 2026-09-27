@@ -62,7 +62,6 @@ func Load() (*Config, error) {
 
 // BindFlags registers config keys with a Cobra command.
 func BindFlags(cmd *cobra.Command) {
-	cmd.Flags().String("log-level", "info", "Log level: debug|info|warn|error")
 	_ = viper.BindPFlag("log_level", cmd.Flags().Lookup("log-level"))
 }
 

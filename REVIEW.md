@@ -18,6 +18,10 @@
 | `config/config.go::Load()` | ✅ **Done** (PR #6) | Reads YAML config via `v.ReadInConfig()` + `v.Unmarshal()`, `.env`/`.env.local` support via godotenv |
 | `handlers/confirm.go` | ✅ **Done** (PR #7) | Buttons + action callbacks wired via `app.Action()` middleware |
 | `main.go` | ✅ **Done** (PR #9) | Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)` |
+| `Dockerfile` | ✅ **Done** (PR #10) | Multi-stage build (`golang:1.25-alpine` → `alpine:3.20` runtime) |
+| `.dockerignore` | ✅ **Done** (PR #10) | Excludes .git, .github, *.md, .env, logs from build context |
+| `.github/workflows/ci.yml` | ✅ **Done** (PR #10) | `docker/build-push-action@v6` with commit SHA tagging (`slack-backbone:${{ github.sha }}`) + startup smoke test against same image (`--log-level debug` for 5s) |
+| `config/config.go::BindFlags` | ✅ **Done** (PR #10) | Removed duplicate `--log-level` flag definition (was causing panic on `--help`) |
 
 ## ⚠️ Stubbed / Incomplete
 
@@ -32,7 +36,6 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 | Priority | Task | Effort |
 |----------|------|--------|
 | P1 | Implement real deploy logic (or at least a more realistic response) | Small |
-| P4 | Add Dockerfile / multi-stage build | Medium |
 
 ## 📊 Code Stats
 
@@ -44,4 +47,4 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 
 ## 🔍 Notable Gaps
 
-_No unresolved gaps remaining._
+1. **`handlers/deploy.go`** — Returns static `"🚀 Deploying to **production**..."` message; no real deployment logic yet.
