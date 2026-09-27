@@ -109,3 +109,15 @@ jobs:
             git diff
             exit 1
           fi
+
+  docker-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build Docker image
+        run: docker build -t slack-backbone:test .
+
+      - name: Run container smoke test
+        run: |
+          docker run --rm slack-backbone:test --help
