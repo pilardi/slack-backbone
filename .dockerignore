@@ -1,0 +1,10 @@
+# Build artifacts
+.git
+.github
+*.md
+*.example
+Dockerfile
+.dockerignore
+.env
+.env.local
+*.log
