@@ -33,8 +33,8 @@ func Load() (*Config, error) {
 	v.SetDefault("config", "teams.yaml")
 
 	// Read .env files if they exist (.env.local overrides .env)
-	godotenv.Read()
-	godotenv.Read(".env.local")
+	_, _ = godotenv.Read()
+	_, _ = godotenv.Read(".env.local")
 
 	// Read env vars from the environment (higher priority than .env files)
 	v.AutomaticEnv()
