@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pablo/slack-backbone/config"
+	"github.com/pilardi/slack-backbone/config"
 	"github.com/slack-go/slack"
 )
 

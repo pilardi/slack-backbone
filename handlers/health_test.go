@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/pablo/slack-backbone/config"
+	"github.com/pilardi/slack-backbone/config"
 )
 
 func TestHealthHandler_Name(t *testing.T) {
