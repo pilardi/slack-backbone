@@ -15,6 +15,7 @@
 | `slack/blocks.go` | ✅ Complete | Block Kit helpers (NewBlocks, SectionBlock, DividerBlock, ActionBlockWithButton) |
 | `.github/workflows/ci.yml` | ✅ Complete | 5 jobs: build, test, lint, format, mod-tidy |
 | `cmd/root.go::run()` | ✅ **Done** (PR #5) | Full wiring: creates Manager per team, registers all handlers on Bolt apps, calls StartAll(), blocks forever |
+| `config/config.go::Load()` | ✅ **Done** (PR #6) | Reads YAML config via `v.ReadInConfig()` + `v.Unmarshal()`, `.env`/`.env.local` support via godotenv |
 | `handlers/confirm.go` | ✅ **Done** (PR #7) | Buttons + action callbacks wired via `app.Action()` middleware |
 
 ## ⚠️ Stubbed / Incomplete
@@ -22,10 +23,7 @@
 ### 1. `handlers/deploy.go` — **Stub**
 Returns a static `"🚀 Deploying to **production**..."` message. No actual deployment logic.
 
-### 2. ~~`handlers/confirm.go`~~ — ✅ **Done (PR #7)**
-Buttons + action callbacks wired via `app.Action()` middleware. Clicking `✅ Confirm` or `❌ Cancel` now produces a confirmation/cancellation message.
-
-### 3. `main.go` — **Minimal**
+### 2. `main.go` — **Minimal**
 Entry point delegates to `cmd.Execute()`. Could benefit from structured logging setup (custom handler with JSON output).
 
 ## 📋 Summary of Remaining Tasks
@@ -38,30 +36,12 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 
 ## 📊 Code Stats
 
-- **Total Go files:** 15
-- **Lines of code (excl. tests):** ~500
+- **Total Go files:** 14 (+ 2 test files)
+- **Lines of code (excl. tests):** ~914
 - **Test coverage (handlers):** 10/10 tests passing
-- **Files with TODOs:** `config/config.go` (resolved in this PR)
+- **Files with TODOs:** none (resolved in PR #6)
 - **Handlers remaining as stubs:** deploy
 
 ## 🔍 Notable Gaps
 
-1. **✅ Resolved:** Command dispatching now works — all 4 handlers are registered on each team's Bolt app via `app.Command()`.
-2. **✅ Resolved:** Config file parsing is now wired — `v.ReadInConfig()` + `v.Unmarshal()` properly load the YAML config.
-3. **✅ Resolved:** `.env` file support added via `godotenv` — reads `.env` and `.env.local` files (YAML config takes final priority).
-4. **✅ Resolved:** Confirm button callbacks wired via `app.Action()` middleware.
-5. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
-
-## 📊 Code Stats
-
-- **Total Go files:** 15
-- **Lines of code (excl. tests):** ~500
-- **Test coverage (handlers):** 10/10 tests passing
-- **Files with TODOs:** `config/config.go`
-- **Handlers remaining as stubs:** deploy
-
-## 🔍 Notable Gaps
-
-1. **✅ Resolved:** Command dispatching now works — all 4 handlers are registered on each team's Bolt app via `app.Command()`.
-2. **No `.env` file reading** — Viper's `v.ReadInConfig()` is missing, so the config file path from `--config` flag is never used.
-3. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
+1. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
