@@ -5,7 +5,6 @@ teams:
   - name: "my-workspace"
     bot_token: "xoxb-your-bot-token"
     app_token: "xapp-your-app-token"
-    default_channel: "#general"
     commands:
       - health
       - status

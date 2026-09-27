@@ -37,14 +37,12 @@ teams:
   - name: "prod-workspace"
     bot_token: "xoxb-..."
     app_token: "xapp-..."
-    default_channel: "#ops-notifications"
     commands: all
     restricted_commands: []
 
   - name: "staging-workspace"
     bot_token: "xoxb-..."
     app_token: "xapp-..."
-    default_channel: "#deployments"
     commands: all
     restricted_commands: [status]
 ```

@@ -11,10 +11,10 @@ import (
 
 // Team represents a single Slack workspace configuration.
 type Team struct {
-	Name           string   `mapstructure:"name"`
-	BotToken       string   `mapstructure:"bot_token"`
-	AppToken       string   `mapstructure:"app_token"`
-	DefaultChannel string   `mapstructure:"default_channel"`
+	Name     string `mapstructure:"name"`
+	BotToken string `mapstructure:"bot_token"`
+	AppToken string `mapstructure:"app_token"`
+
 	AllowedCmds    []string `mapstructure:"commands"`
 	RestrictedCmds []string `mapstructure:"restricted_commands"`
 }
@@ -84,12 +84,4 @@ func (t *Team) Allowed(cmd string) bool {
 		return false
 	}
 	return true
-}
-
-// GetDefaultChannel returns the team's default notification channel.
-func (t *Team) GetDefaultChannel() string {
-	if t.DefaultChannel != "" {
-		return t.DefaultChannel
-	}
-	return "#general"
 }
