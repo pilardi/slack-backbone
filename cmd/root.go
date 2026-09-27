@@ -20,7 +20,10 @@ channels about events.`,
 }
 
 func Execute(ctx context.Context, logger *slog.Logger) error {
-	return rootCmd.ExecuteContext(ctx)
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		return err
+	}
+	return nil
 }
 
 func init() {
