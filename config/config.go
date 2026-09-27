@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -28,6 +29,7 @@ func Load() (*Config, error) {
 
 	// Set defaults
 	v.SetDefault("log_level", "info")
+	v.SetDefault("config", "teams.yaml")
 
 	// Read env vars
 	v.AutomaticEnv()
@@ -37,7 +39,20 @@ func Load() (*Config, error) {
 	// Bind known keys from env
 	_ = v.BindEnv("config", "CONFIG_FILE")
 
-	return nil, nil
+	// Read the config file if a path was provided
+	if cfgPath := v.GetString("config"); cfgPath != "" {
+		v.SetConfigFile(cfgPath)
+		if err := v.ReadInConfig(); err != nil {
+			return nil, fmt.Errorf("failed to read config file %q: %w", cfgPath, err)
+		}
+	}
+
+	var cfg Config
+	if err := v.Unmarshal(&cfg); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	return &cfg, nil
 }
 
 // BindFlags registers config keys with a Cobra command.
