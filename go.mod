@@ -4,6 +4,7 @@ go 1.25.0
 
 require (
 	github.com/Asafrose/bolt-go v0.0.0-20250917133633-320618296e8b
+	github.com/joho/godotenv v1.5.1
 	github.com/slack-go/slack v0.17.3
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.21.0

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,15 +24,19 @@ type Config struct {
 	Teams []Team `mapstructure:"teams"`
 }
 
-// Load reads config from flags, env vars, and a YAML file.
+// Load reads config from flags, .env files, env vars, and a YAML file.
 func Load() (*Config, error) {
 	v := viper.New()
 
-	// Set defaults
+	// Set defaults (lowest priority)
 	v.SetDefault("log_level", "info")
 	v.SetDefault("config", "teams.yaml")
 
-	// Read env vars
+	// Read .env files if they exist (.env.local overrides .env)
+	_, _ = godotenv.Read()
+	_, _ = godotenv.Read(".env.local")
+
+	// Read env vars from the environment (higher priority than .env files)
 	v.AutomaticEnv()
 	v.SetEnvPrefix("slack_backbone")
 	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
@@ -39,7 +44,7 @@ func Load() (*Config, error) {
 	// Bind known keys from env
 	_ = v.BindEnv("config", "CONFIG_FILE")
 
-	// Read the config file if a path was provided
+	// Read the config file if a path was provided (highest priority before defaults)
 	if cfgPath := v.GetString("config"); cfgPath != "" {
 		v.SetConfigFile(cfgPath)
 		if err := v.ReadInConfig(); err != nil {
