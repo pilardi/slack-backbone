@@ -35,8 +35,11 @@ func init() {
 	rootCmd.Flags().String("config", "", "Path to teams.yaml config file")
 	rootCmd.Flags().StringP("team", "t", "", "Target a specific team (default: all)")
 	rootCmd.Flags().String("log-level", "info", "Log level: debug|info|warn|error")
+	rootCmd.Flags().String("mode", "cli", "Operation mode: cli | mcp")
+	rootCmd.Flags().Int("http-port", 0, "HTTP port for MCP streamable transport (MCP mode only)")
 
 	config.BindFlags(rootCmd)
+	rootCmd.AddCommand(mcpCmd)
 }
 
 func run(ctx context.Context) error {
