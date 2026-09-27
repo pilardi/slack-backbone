@@ -35,7 +35,7 @@ func Load() (*Config, error) {
 	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 
 	// Bind known keys from env
-	v.BindEnv("config", "CONFIG_FILE")
+	_ = v.BindEnv("config", "CONFIG_FILE")
 
 	return nil, nil
 }
