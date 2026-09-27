@@ -93,7 +93,7 @@ This project was built with the help of several tools and services:
 - **[Berd](https://github.com/block/berd/)** — the desktop app where this conversation took place, providing a rich interface for working with agents.
 - **[Goose](https://github.com/goose),** the coding agent used to design, implement, and review all changes in this project.
 - **Unsloth Studio** ([`unslothai/unsloth`](https://github.com/unslothai/unsloth)) — the inference engine powering the LLM used during development.
-- **The model** — the specific LLM instance running on top of Unsloth, responsible for all reasoning and code generation in this session.
+- **Qwen-3.8-35B-A3B** — the model powering this session, running on top of Unsloth Studio's inference engine.
 
 ## License
 
