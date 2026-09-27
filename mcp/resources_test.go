@@ -23,10 +23,6 @@ func TestHandleChannels(t *testing.T) {
 	if err != nil {
 		t.Logf("handleChannels returned error (expected with mock tokens): %v", err)
 	}
-	// With mock tokens, the API call may fail auth; we just verify no panic
-	if result != nil && len(result.Contents) > 0 {
-		// Good — got a response
-	}
 }
 
 func TestHandleUsers(t *testing.T) {
