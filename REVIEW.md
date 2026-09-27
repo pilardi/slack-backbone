@@ -36,16 +36,12 @@ Entry point delegates to `cmd.Execute()`. Could benefit from structured logging 
 
 ## 📊 Code Stats
 
-- **Total Go files:** 15
-- **Lines of code (excl. tests):** ~500
+- **Total Go files:** 14 (+ 2 test files)
+- **Lines of code (excl. tests):** ~914
 - **Test coverage (handlers):** 10/10 tests passing
-- **Files with TODOs:** `config/config.go` (resolved in PR #6)
+- **Files with TODOs:** none (resolved in PR #6)
 - **Handlers remaining as stubs:** deploy
 
 ## 🔍 Notable Gaps
 
-1. **✅ Resolved:** Command dispatching now works — all 4 handlers are registered on each team's Bolt app via `app.Command()`.
-2. **✅ Resolved:** Config file parsing is now wired — `v.ReadInConfig()` + `v.Unmarshal()` properly load the YAML config.
-3. **✅ Resolved:** `.env` file support added via `godotenv` — reads `.env` and `.env.local` files (YAML config takes final priority).
-4. **✅ Resolved:** Confirm button callbacks wired via `app.Action()` middleware.
-5. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
+1. **No logging configuration** — `slog.Default()` uses console output; no JSON structured logs for production use.
