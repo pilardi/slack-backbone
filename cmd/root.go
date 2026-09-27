@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/pablo/slack-backbone/config"
+	"github.com/pilardi/slack-backbone/config"
 	"github.com/spf13/cobra"
 )
 

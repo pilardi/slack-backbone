@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/pablo/slack-backbone/cmd"
+	"github.com/pilardi/slack-backbone/cmd"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/pablo/slack-backbone
+module github.com/pilardi/slack-backbone
 
 go 1.25.0
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Asafrose/bolt-go"
-	"github.com/pablo/slack-backbone/config"
+	"github.com/pilardi/slack-backbone/config"
 	slackapi "github.com/slack-go/slack"
 )
 
