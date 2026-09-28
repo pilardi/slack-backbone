@@ -6,7 +6,7 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 4 | Add CI integration test job + combined coverage reporting | P2 | Medium | ✅ **In Progress (PR #17)** — all checks passing, awaiting merge |
+| 4 | Add CI integration test job + combined coverage reporting | P2 | Medium | ✅ Done (PR #17) |
 | 5 | Add `.env.example` reference to README.md | P3 | Small | ✅ Done (README.md lines 91-98 already documents it) |
 
 ## 🆕 New Tasks
