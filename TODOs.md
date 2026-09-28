@@ -11,7 +11,7 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 21 | Introduce a `Makefile` build process (build, test, lint, format, docker) | P3 | Medium | ⬜ Open |
+| 21 | Introduce a `Makefile` build process (build, test, lint, format, docker) | P3 | Medium | 🔄 In Progress (PR #22) |
 
 ## 📋 Completed & Merged (on main)
 
