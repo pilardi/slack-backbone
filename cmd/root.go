@@ -17,8 +17,8 @@ var rootCmd *cobra.Command
 
 func init() {
 	rootCmd = &cobra.Command{
-		Use:          "slack-backbone",
-		Short:        "Multi-team Slack socket-mode app",
+		Use:   "slack-backbone",
+		Short: "Multi-team Slack socket-mode app",
 		Long: `A Go application that connects to multiple Slack workspaces
 via socket mode (Bolt), exposes slash commands, and notifies
 channels about events.`,
