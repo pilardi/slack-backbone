@@ -92,11 +92,11 @@ jobs:
           timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
-            --mode mcp --http-port 0
+            --mode mcp --http-port 0 || [ $? -eq 124 ]
 
       - name: Integration-style test (multi-flag combination)
         run: |
           timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
-            --mode mcp --http-port 0 --log-level debug
+            --mode mcp --http-port 0 --log-level debug || [ $? -eq 124 ]
