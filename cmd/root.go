@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"os"
 	"strings"
 
 	"github.com/Asafrose/bolt-go"
@@ -33,7 +34,10 @@ channels about events.`,
 	rootCmd.Flags().String("mode", "cli", "Operation mode: cli | mcp")
 	rootCmd.Flags().Int("http-port", 0, "HTTP port for MCP streamable transport (MCP mode only)")
 
-	config.BindFlags(rootCmd)
+	if err := config.BindFlags(rootCmd); err != nil {
+		fmt.Fprintf(os.Stderr, "bind flags: %v\n", err)
+		os.Exit(1)
+	}
 	rootCmd.AddCommand(mcpCmd)
 }
 

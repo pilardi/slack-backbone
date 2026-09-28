@@ -62,8 +62,8 @@ func Load(cmd *cobra.Command) (*Config, error) {
 }
 
 // BindFlags registers config keys with a Cobra command.
-func BindFlags(cmd *cobra.Command) {
-	viper.BindPFlags(cmd.Flags())
+func BindFlags(cmd *cobra.Command) error {
+	return viper.BindPFlags(cmd.Flags())
 }
 
 // Allowed returns true if the command is allowed for this team.
