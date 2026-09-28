@@ -11,8 +11,7 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 6 | Add code coverage badge to README | P3 | Small | ✅ Done (PR #18) |
-| 7 | Add `.github/workflows/docker-smoke.yml` for real-token validation | P4 | Medium | ✅ Done (PR #20) |
+| 8 | Review `actions/cache` version in CI build step (v4.2.1 tar extraction bug) | P3 | Small | ⬜ Open |
 
 ## 📋 Completed & Merged (on main)
 
@@ -29,8 +28,10 @@
 | #9 | feat: add structured JSON logging via slog.NewJSONHandler | ✅ |
 | #10 | docs: mark Dockerfile as done, remove from remaining tasks | ✅ |
 | #11 | docs: add Acknowledgments section | ✅ |
-| #12 | refactor: remove unused default_channel | ✅ |
-| #13 | feat(mcp): add MCP server for agent Slack communication | ✅ |
+| #18 | Add code coverage badge to README | ✅ Done (PR #18) |
+| #20 | Add `.github/workflows/docker-smoke.yml` for real-token validation | ✅ Done (PR #20) |
+| #12 | refactor: remove unused default_channel                | ✅   |
+| #13 | feat(mcp): add MCP server for agent Slack communication| ✅   |       |                      |
 | #14 | docs: convert REVIEW.md → TODOs.md with actionable items | ✅ |
 | #15 | feat(mcp): wire slack_deploy to delegate to handlers.DeployHandler | ✅ |
 | #16 | feat(handlers): implement real deploy logic with env validation + integration tests | ✅ |
