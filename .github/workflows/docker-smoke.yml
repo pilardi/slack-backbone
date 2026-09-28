@@ -75,36 +75,28 @@ jobs:
 
       - name: Smoke test (log-level flag)
         run: |
-          timeout 5s docker run --rm \
-            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+          timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
             --log-level debug || [ $? -eq 124 ]
 
       - name: Smoke test (cli mode with HTTP port)
         run: |
-          timeout 10s docker run --rm \
-            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+          timeout 10s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
-            -e MODE=cli \
-            -e HTTP_PORT=8080 || [ $? -eq 124 ]
+            --mode cli --http-port 8080 || [ $? -eq 124 ]
 
       - name: Smoke test (mcp mode, stdio transport)
         run: |
-          timeout 5s docker run --rm \
-            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+          timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
-            -e MODE=mcp \
-            -e HTTP_PORT=0
+            --mode mcp --http-port 0
 
       - name: Integration-style test (multi-flag combination)
         run: |
-          timeout 5s docker run --rm \
-            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+          timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
-            -e MODE=mcp \
-            -e HTTP_PORT=0 \
-            -e SLACK_BACKBONE_LOG_LEVEL=debug
+            --mode mcp --http-port 0 --log-level debug
