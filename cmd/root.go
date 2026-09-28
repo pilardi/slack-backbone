@@ -13,25 +13,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "slack-backbone",
-	Short: "Multi-team Slack socket-mode app",
-	Long: `A Go application that connects to multiple Slack workspaces
-via socket mode (Bolt), exposes slash commands, and notifies
-channels about events.`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return run(cmd.Context())
-	},
-}
-
-func Execute(ctx context.Context, logger *slog.Logger) error {
-	if err := rootCmd.ExecuteContext(ctx); err != nil {
-		return err
-	}
-	return nil
-}
+var rootCmd *cobra.Command
 
 func init() {
+	rootCmd = &cobra.Command{
+		Use:   "slack-backbone",
+		Short: "Multi-team Slack socket-mode app",
+		Long: `A Go application that connects to multiple Slack workspaces
+via socket mode (Bolt), exposes slash commands, and notifies
+channels about events.`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return run(cmd.Context())
+		},
+	}
 	rootCmd.Flags().String("config", "", "Path to teams.yaml config file")
 	rootCmd.Flags().StringP("team", "t", "", "Target a specific team (default: all)")
 	rootCmd.Flags().String("log-level", "info", "Log level: debug|info|warn|error")
@@ -40,6 +34,13 @@ func init() {
 
 	config.BindFlags(rootCmd)
 	rootCmd.AddCommand(mcpCmd)
+}
+
+func Execute(ctx context.Context, logger *slog.Logger) error {
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		return err
+	}
+	return nil
 }
 
 func run(ctx context.Context) error {

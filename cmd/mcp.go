@@ -11,27 +11,28 @@ import (
 )
 
 // mcpCmd is the subcommand for running in MCP mode.
-var mcpCmd = &cobra.Command{
-	Use:   "mcp",
-	Short: "Run as an MCP server",
-	Long: `Start slack-backbone as an MCP (Model Context Protocol) server.
+var mcpCmd *cobra.Command
+
+func init() {
+	mcpCmd = &cobra.Command{
+		Use:   "mcp",
+		Short: "Run as an MCP server",
+		Long: `Start slack-backbone as an MCP (Model Context Protocol) server.
 Agents can connect via stdio or streamable HTTP to invoke Slack tools,
 query resources, and use prompt templates.
 
 Usage:
   slack-backbone --mode mcp [--config teams.yaml] [--http-port 8080]`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return runMCP(cmd.Context())
-	},
-}
-
-func init() {
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runMCP(cmd.Context())
+		},
+	}
 	mcpCmd.Flags().String("config", "", "Path to teams.yaml config file")
 	mcpCmd.Flags().Int("http-port", 0, "HTTP port for streamable transport (default: stdio only)")
 }
 
 func runMCP(ctx context.Context) error {
-	cfg, err := config.Load()
+	cfg, err := config.Load(mcpCmd)
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
