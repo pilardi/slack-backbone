@@ -187,10 +187,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Run container smoke test
-        run: |
-          timeout 5s docker run --rm slack-backbone:${{ github.sha }} --log-level debug || true
-
       - name: Save Docker image as tarball
         run: |
           docker save -o /tmp/docker-image.tar slack-backbone:${{ github.sha }}

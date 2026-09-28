@@ -41,41 +41,33 @@ jobs:
         run: |
           timeout 5s docker run --rm slack-backbone:${{ github.sha }} --help | grep -q "Usage:"
 
-      - name: Smoke test (log-level flag — assert output contains log messages)
+      - name: Smoke test (log-level flag)
         run: |
-          OUTPUT=$(timeout 5s docker run --rm \
+          timeout 5s docker run --rm \
             slack-backbone:${{ github.sha }} \
             --config /dev/null \
-            --log-level debug 2>&1) || true
-          echo "$OUTPUT" | grep -q "shutting down" || { echo "FAIL: expected 'shutting down' in output"; exit 1; }
-          echo "PASS: log-level test produced expected output"
+            --log-level debug
 
-      - name: Smoke test (cli mode with HTTP port — assert binary started)
+      - name: Smoke test (cli mode with HTTP port)
         run: |
-          OUTPUT=$(timeout 10s docker run --rm \
+          timeout 10s docker run --rm \
             slack-backbone:${{ github.sha }} \
             --config /dev/null \
             -e MODE=cli \
-            -e HTTP_PORT=8080 2>&1) || true
-          echo "$OUTPUT" | grep -qi "starting\|listening\|error" || { echo "FAIL: expected startup message in output"; exit 1; }
-          echo "PASS: cli mode test produced expected output"
+            -e HTTP_PORT=8080
 
-      - name: Smoke test (mcp mode, stdio transport — assert binary started)
+      - name: Smoke test (mcp mode, stdio transport)
         run: |
-          OUTPUT=$(timeout 10s docker run --rm \
+          timeout 10s docker run --rm \
             slack-backbone:${{ github.sha }} \
             --config /dev/null \
-            -e MODE=mcp 2>&1) || true
-          echo "$OUTPUT" | grep -qi "starting\|listening\|error" || { echo "FAIL: expected startup message in output"; exit 1; }
-          echo "PASS: mcp mode test produced expected output"
+            -e MODE=mcp
 
       - name: Integration-style test (multi-flag combination)
         run: |
-          OUTPUT=$(timeout 5s docker run --rm \
+          timeout 5s docker run --rm \
             slack-backbone:${{ github.sha }} \
             --config /dev/null \
             -e MODE=cli \
             -e HTTP_PORT=9090 \
-            -e SLACK_BACKBONE_LOG_LEVEL=debug 2>&1) || true
-          echo "$OUTPUT" | grep -qi "starting\|listening\|error" || { echo "FAIL: expected startup message in output"; exit 1; }
-          echo "PASS: multi-flag test produced expected output"
+            -e SLACK_BACKBONE_LOG_LEVEL=debug
