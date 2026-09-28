@@ -6,9 +6,17 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 1 | Implement real deploy logic in `handlers/deploy.go` (replace static stub) | P1 | Small | ⬜ Open |
-| 2 | Wire `slack_deploy` MCP tool to call the deploy handler | P1 | Small | ⬜ Open |
-| 3 | Add `.env.example` documentation to README about env var precedence | P2 | Small | ✅ Done (PR #14) |
+| 1 | Implement real deploy logic in `handlers/deploy.go` | P1 | Small | ✅ **PR #16** |
+| 2 | Wire `slack_deploy` MCP tool to call the deploy handler | P1 | Small | ✅ Done (PR #15 merged) |
+| 3 | Add `.env.example` documentation to README about env var precedence | P2 | Small | ✅ Done (PR #14 merged) |
+
+## 🆕 New Tasks
+
+| # | Task | Priority | Effort | Status |
+|---|------|----------|--------|--------|
+| 4 | Add integration test suite (`integration/`) for end-to-end verification | P2 | Medium | ⬜ Open |
+| 5 | Add `.github/workflows/integration.yml` CI job for integration tests | P3 | Medium | ⬜ Open |
+| 6 | Add a `--channel` flag to deploy handler for target channel specification | P3 | Small | ⬜ Open |
 
 ## 📋 Completed & Merged
 
