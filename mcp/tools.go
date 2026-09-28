@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/pilardi/slack-backbone/config"
+	"github.com/pilardi/slack-backbone/handlers"
 	slackpkg "github.com/pilardi/slack-backbone/slack"
 	"github.com/slack-go/slack"
 )
@@ -160,14 +162,30 @@ func handleStatus(s *Server, ctx context.Context, teamName string) (*mcp.CallToo
 	}, nil, nil
 }
 
-func handleDeploy(s *Server, ctx context.Context, team, env string) (*mcp.CallToolResult, any, error) {
+func handleDeploy(s *Server, ctx context.Context, teamName, env string) (*mcp.CallToolResult, any, error) {
 	if env == "" {
 		env = "production"
 	}
 
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{&mcp.TextContent{Text: fmt.Sprintf("🚀 Deploying to **%s** in environment `%s`...", team, env)}},
-	}, nil, nil
+	// Look up the full team config (needed by the handler)
+	var teamConfig config.Team
+	for _, t := range s.cfg.Teams {
+		if t.Name == teamName {
+			teamConfig = t
+			break
+		}
+	}
+	if teamConfig.Name == "" {
+		return nil, nil, fmt.Errorf("unknown team: %s", teamName)
+	}
+
+	// Delegate to the CLI deploy handler
+	blocks, err := (&handlers.DeployHandler{}).Run(ctx, []string{"--env", env}, teamConfig)
+	if err != nil {
+		return nil, nil, fmt.Errorf("deploy failed: %w", err)
+	}
+
+	return &mcp.CallToolResult{Content: blocksToMCPContent(blocks)}, nil, nil
 }
 
 func handleConfirm(s *Server, ctx context.Context, team, question string) (*mcp.CallToolResult, any, error) {
@@ -190,4 +208,26 @@ func handleListTeams(s *Server, ctx context.Context) (*mcp.CallToolResult, any, 
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{&mcp.TextContent{Text: "Configured teams:\n" + strings.Join(lines, "\n")}},
 	}, nil, nil
+}
+
+// blocksToMCPContent converts a *slack.Blocks to MCP content items.
+func blocksToMCPContent(b *slack.Blocks) []mcp.Content {
+	var content []mcp.Content
+	for _, block := range b.BlockSet {
+		switch blk := block.(type) {
+		case *slack.SectionBlock:
+			if blk.Text != nil {
+				content = append(content, &mcp.TextContent{Text: blk.Text.Text})
+			}
+		case *slack.DividerBlock:
+			content = append(content, &mcp.TextContent{Text: "\n───\n"})
+		case *slack.HeaderBlock:
+			content = append(content, &mcp.TextContent{Text: fmt.Sprintf("# %s\n", blk.Text.Text)})
+		case *slack.ImageBlock:
+			content = append(content, &mcp.TextContent{Text: fmt.Sprintf("![image] (%s)", blk.AltText)})
+		default:
+			content = append(content, &mcp.TextContent{Text: "[block type not rendered]"})
+		}
+	}
+	return content
 }
