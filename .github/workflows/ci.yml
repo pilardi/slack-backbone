@@ -16,17 +16,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: "1.25"
-
-      - name: Cache Go modules
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ github.sha }}
-            ${{ runner.os }}-go-
+          cache: true
 
       - name: Download dependencies
         run: go mod download
@@ -43,17 +33,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: "1.25"
-
-      - name: Cache Go modules
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ github.sha }}
-            ${{ runner.os }}-go-
+          cache: true
 
       - name: Run unit tests with coverage
         run: |
@@ -71,17 +51,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: "1.25"
-
-      - name: Cache Go modules
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ github.sha }}
-            ${{ runner.os }}-go-
+          cache: true
 
       - name: Run integration tests
         run: go test -v ./integration/...
@@ -96,17 +66,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: "1.25"
-
-      - name: Cache Go modules
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ github.sha }}
-            ${{ runner.os }}-go-
+          cache: true
 
       - name: Run all tests with combined coverage
         run: |
