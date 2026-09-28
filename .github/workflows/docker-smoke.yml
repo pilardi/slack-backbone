@@ -58,6 +58,17 @@ jobs:
           fi
           echo "Image verified locally: $IMAGE"
 
+      - name: Create minimal teams.yaml for smoke tests
+        run: |
+          cat > /tmp/teams-smoke.yaml <<'EOF'
+          teams:
+            - name: test-workspace
+              bot_token: xoxb-test-token-12345
+              app_token: xapp-test-app-12345
+              commands: all
+              restricted_commands: []
+          EOF
+
       - name: Smoke test (--help, no config needed)
         run: |
           timeout 5s docker run --rm slack-backbone:${{ github.sha }} --help | grep -q "Usage:"
@@ -65,30 +76,34 @@ jobs:
       - name: Smoke test (log-level flag)
         run: |
           timeout 5s docker run --rm \
+            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
-            --config /dev/null \
+            --config /etc/slack-backbone/teams.yaml \
             --log-level debug
 
       - name: Smoke test (cli mode with HTTP port)
         run: |
           timeout 10s docker run --rm \
+            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
-            --config /dev/null \
+            --config /etc/slack-backbone/teams.yaml \
             -e MODE=cli \
             -e HTTP_PORT=8080
 
       - name: Smoke test (mcp mode, stdio transport)
         run: |
           timeout 10s docker run --rm \
+            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
-            --config /dev/null \
+            --config /etc/slack-backbone/teams.yaml \
             -e MODE=mcp
 
       - name: Integration-style test (multi-flag combination)
         run: |
           timeout 5s docker run --rm \
+            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
-            --config /dev/null \
+            --config /etc/slack-backbone/teams.yaml \
             -e MODE=cli \
             -e HTTP_PORT=9090 \
             -e SLACK_BACKBONE_LOG_LEVEL=debug
