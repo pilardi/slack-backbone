@@ -27,6 +27,6 @@ jobs:
         run: |
           docker run --rm slack-backbone:test --help 2>&1 | grep -q "Usage:" || exit 1
 
-      - name: Run smoke test (no-args)
+      - name: Run smoke test (no-args with env)
         run: |
-          timeout 5 docker run --rm slack-backbone:test 2>&1 | grep -qi "starting\|listening\|error" || true
+          timeout 5 docker run --rm -e MODE=cli -e HTTP_PORT=0 slack-backbone:test 2>&1 | grep -qi "starting\|listening\|error" || true
