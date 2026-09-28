@@ -24,7 +24,7 @@ These items were addressed in PRs and are now on `main`:
 
 ## 🔍 Notable Gaps
 
-### 1. `handlers/deploy.go` — Stub
+### 1. `handlers/deploy.go` — CLI Stub
 Parses `--env <value>` but returns a static `"🚀 Deploying to **%s**..."` message. No real deployment logic yet.
 
 **Suggested approach:**
@@ -32,7 +32,10 @@ Parses `--env <value>` but returns a static `"🚀 Deploying to **%s**..."` mess
 - Return a structured response indicating which environment would be targeted
 - Optionally call a CI/CD webhook or API endpoint for real deployments
 
-### 2. `main.go` — Already has graceful shutdown + structured logging ✅
+### 2. `mcp/tools.go::handleDeploy` — MCP Stub (separate from CLI)
+The MCP tool `slack_deploy` has its own stub handler (`handleDeploy`) that returns a static message. It should ideally delegate to `handlers/deploy.go::Run()` for consistency with CLI behavior.
+
+### 3. `main.go` — Already has graceful shutdown + structured logging ✅
 Entry point already handles:
 - Graceful shutdown via `signal.NotifyContext(SIGINT, SIGTERM)`
 - Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)`
