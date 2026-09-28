@@ -1,0 +1,52 @@
+name: Coverage Badge
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  badge:
+    name: Generate coverage badge
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+          cache: true
+
+      - name: Run tests with coverage
+        run: |
+          go test -coverprofile=combined.out ./... 2>/dev/null || true
+
+      - name: Generate badge
+        id: badge
+        run: |
+          COVERAGE=$(go tool cover -func=combined.out | grep 'total:' | awk '{print $3}' | tr -d '%')
+          if [ -z "$COVERAGE" ]; then
+            COVERAGE="0.0"
+          fi
+          # Generate SVG badge using shields.io API (no action needed)
+          ESCAPED=$(echo "$COVERAGE%" | sed 's/%/%25/g')
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+
+      - name: Update README badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          COVERAGE="${{ steps.badge.outputs.coverage }}"
+          ESCAPED=$(echo "$COVERAGE%" | sed 's/%/%25/g')
+          # Update the badge link in README.md
+          sed -i "s|https://img.shields.io/badge/coverage-[0-9.]*%25-brightgreen|https://img.shields.io/badge/coverage-${ESCAPED}-brightgreen|" README.md
+
+      - name: Commit and push badge update
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore: update coverage badge to ${{ steps.badge.outputs.coverage }}%"
+          file_pattern: README.md

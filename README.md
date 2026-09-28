@@ -2,6 +2,8 @@
 
 A multi-team Slack socket-mode application written in Go. Exposes slash commands, notifies channels about events, and exposes an **MCP (Model Context Protocol) server** so agents can programmatically post messages, send notifications, check health, trigger deployments, and more — all without a public DNS or HTTP server required.
 
+[![Coverage](https://img.shields.io/badge/coverage-60.7%25-brightgreen)](https://github.com/pilardi/slack-backbone/actions/workflows/coverage-badge.yml)
+
 ## Features
 
 - **Socket mode** via `Asafrose/bolt-go` — connects to Slack over WebSocket
