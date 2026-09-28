@@ -1,66 +1,68 @@
 # Slack-Backbone — TODOs & Pending Work
 
-*Date: 2026-09-27*
+*Date: 2026-09-28*
 
 ## 🎯 Active Todos (Unmerged)
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 1 | Implement real deploy logic in `handlers/deploy.go` | P1 | Small | ✅ **PR #16** |
-| 2 | Wire `slack_deploy` MCP tool to call the deploy handler | P1 | Small | ✅ Done (PR #15 merged) |
-| 3 | Add `.env.example` documentation to README about env var precedence | P2 | Small | ✅ Done (PR #14 merged) |
+| 4 | Add CI integration test job + combined coverage reporting | P2 | Medium | ⬜ Open (PR #17) |
+| 5 | Add `.env.example` reference to README.md | P3 | Small | ⬜ Open |
 
 ## 🆕 New Tasks
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 4 | Add integration test suite (`integration/`) for end-to-end verification | P2 | Medium | ⬜ Open |
-| 5 | Add `.github/workflows/integration.yml` CI job for integration tests | P3 | Medium | ⬜ Open |
-| 6 | Add a `--channel` flag to deploy handler for target channel specification | P3 | Small | ⬜ Open |
+| 6 | Add code coverage badge to README | P3 | Small | ⬜ Open |
+| 7 | Add `.github/workflows/docker-smoke.yml` for real-token validation | P4 | Medium | ⬜ Open |
 
-## 📋 Completed & Merged
+## 📋 Completed & Merged (on main)
 
-These items were addressed in PRs and are now on `main`:
+| PR | Title | Status |
+|----|-------|--------|
+| #1 | fix(ci): update to Asafrose/bolt-go API and fix type mismatches | ✅ |
+| #2 | chore(ci): update actions to Node.js 24-compatible versions + pin ubuntu-24.04 | ✅ |
+| #3 | feat: implement real health check with Slack API connectivity verification | ✅ |
+| #4 | feat: implement real status handler with --team flag support | ✅ |
+| #5 | feat: wire up run() to register handlers and start Bolt apps (#5) | ✅ |
+| #6 | feat: implement config.Load() + add teams.yaml.example | ✅ |
+| #7 | feat: wire confirm button callbacks via app.Action() middleware | ✅ |
+| #8 | docs: regenerate REVIEW.md with all completed work | ✅ |
+| #9 | feat: add structured JSON logging via slog.NewJSONHandler | ✅ |
+| #10 | docs: mark Dockerfile as done, remove from remaining tasks | ✅ |
+| #11 | docs: add Acknowledgments section | ✅ |
+| #12 | refactor: remove unused default_channel | ✅ |
+| #13 | feat(mcp): add MCP server for agent Slack communication | ✅ |
+| #14 | docs: convert REVIEW.md → TODOs.md with actionable items | ✅ |
+| #15 | feat(mcp): wire slack_deploy to delegate to handlers.DeployHandler | ✅ |
+| #16 | feat(handlers): implement real deploy logic with env validation + integration tests | ✅ |
 
-- ✅ PR #5 — Full wiring of `cmd/root.go::run()` (Manager per team, all handlers registered on Bolt apps, StartAll(), blocks forever)
-- ✅ PR #6 — Config loading via viper + godotenv (`.env`/`.env.local` support)
-- ✅ PR #7 — `handlers/confirm.go` with buttons + action callbacks
-- ✅ PR #9 — Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)`
-- ✅ PR #10 — Multi-stage Dockerfile + `.dockerignore` + smoke test in CI
-- ✅ PR #12 — Removed unused `default_channel`
-- ✅ PR #13 — MCP server (6 tools, 3 resources, 3 prompts) with stdio + streamable HTTP transports
+## 🔍 Resolved Gaps (no longer applicable)
 
-## 🔍 Notable Gaps
+### ~~`handlers/deploy.go` — CLI Stub~~ ✅ Done (PR #16)
+Now implements: env validation (`production/staging/development/qa`), `--channel` targeting, structured logging via `slog.InfoContext`, simulated deploy ID.
 
-### 1. `handlers/deploy.go` — CLI Stub
-Parses `--env <value>` but returns a static `"🚀 Deploying to **%s**..."` message. No real deployment logic yet.
+### ~~`mcp/tools.go::handleDeploy` — Separate Stub~~ ✅ Done (PR #15)
+Now delegates to `handlers.DeployHandler{}.Run()` for consistency with CLI behavior.
 
-**Suggested approach:**
-- Accept an `env` argument (already parsed), log the intent
-- Return a structured response indicating which environment would be targeted
-- Optionally call a CI/CD webhook or API endpoint for real deployments
+### ~~`main.go` — Minimal entry point~~ ✅ Done
+Already had graceful shutdown (`signal.NotifyContext`) and structured JSON logging (`slog.NewJSONHandler`). No further work needed here.
 
-### 2. `mcp/tools.go::handleDeploy` — MCP Stub (separate from CLI)
-The MCP tool `slack_deploy` has its own stub handler (`handleDeploy`) that returns a static message. It should ideally delegate to `handlers/deploy.go::Run()` for consistency with CLI behavior.
-
-### 3. `main.go` — Already has graceful shutdown + structured logging ✅
-Entry point already handles:
-- Graceful shutdown via `signal.NotifyContext(SIGINT, SIGTERM)`
-- Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)`
-
-**Remaining:** Could add a custom `slog.Handler` with contextual fields (team, version) for richer log output.
-
-## 📊 Code Stats
+## 📊 Code Stats (as of 2026-09-28)
 
 | Metric | Value |
 |--------|-------|
-| Total Go files | 14 (+ 2 test files) |
-| Lines of code (excl. tests) | ~914 |
-| Test coverage (handlers) | 10/10 tests passing |
-| Files with TODOs | none (resolved in PR #6) |
-| Handlers remaining as stubs | deploy |
+| Total Go files | 14 (+ 5 test files across handlers, mcp, integration) |
+| Lines of code (excl. tests) | ~970 |
+| Unit test coverage (`handlers/`) | ~46% |
+| Unit test coverage (`mcp/`) | ~72% |
+| Combined coverage (all packages) | ~61% |
+| Integration test files | 3 (`deploy_test.go`, `full_test.go`, plus handler tests) |
+| Handlers remaining as stubs | **none** ✅ |
 
 ## 📝 Notes
 
 - The `.env.example` file is kept for onboarding reference; tokens are primarily sourced from `teams.yaml`, but `.env`/`.env.local` are still read by godotenv.
 - Config precedence: **CLI flags > env vars > .env.local > .env > teams.yaml > defaults**
+- CI runs 7 jobs: `build`, `test`, `integration`, `coverage`, `lint`, `format`, `mod-tidy`, `docker-build`
+- PR #17 (unmerged) adds the `integration` and `coverage` CI jobs
