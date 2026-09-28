@@ -43,7 +43,7 @@ func init() {
 }
 
 func run(ctx context.Context) error {
-	cfg, err := config.Load()
+	cfg, err := config.Load(rootCmd)
 	if err != nil {
 		return err
 	}
