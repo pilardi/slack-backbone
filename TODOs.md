@@ -11,7 +11,7 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 8 | Review `actions/cache` version in CI build step (v4.2.1 tar extraction bug) | P3 | Small | ⬜ Open |
+| 21 | Introduce a `Makefile` build process (build, test, lint, format, docker) | P3 | Medium | ⬜ Open |
 
 ## 📋 Completed & Merged (on main)
 
@@ -35,6 +35,7 @@
 | #14 | docs: convert REVIEW.md → TODOs.md with actionable items | ✅ |
 | #15 | feat(mcp): wire slack_deploy to delegate to handlers.DeployHandler | ✅ |
 | #16 | feat(handlers): implement real deploy logic with env validation + integration tests | ✅ |
+| #8  | ci: replace explicit actions/cache with setup-go cache:true (simplified 4 cache steps) | ✅ Done (PR #21) |
 
 ## 🔍 Resolved Gaps (no longer applicable)
 
