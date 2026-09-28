@@ -25,10 +25,15 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Verify image exists
+        run: |
+          docker images slack-backbone:test | grep slack-backbone || exit 1
+          echo "Image built successfully"
+
       - name: Run smoke test (help)
         run: |
-          OUTPUT=$(docker run --rm slack-backbone:test --help 2>&1) || { echo "docker run failed"; exit 1; }
-          echo "$OUTPUT" | grep -q "Usage:" || { echo "FAIL: no Usage line found"; exit 1; }
+          OUTPUT=$(docker run --rm slack-backbone:test --help 2>&1) || { echo "docker run --help failed with exit $?"; exit 1; }
+          echo "$OUTPUT" | grep -q "Usage:" || { echo "FAIL: no Usage line found in output"; exit 1; }
 
       - name: Run smoke test (no-args with env)
         run: |
