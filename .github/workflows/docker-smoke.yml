@@ -23,13 +23,19 @@ jobs:
 
       - name: Load Docker image
         run: |
-          docker load -i /tmp/image/docker-image.tar
+          ls -la /tmp/image/ || { echo "ERROR: artifact directory empty"; exit 1; }
+          docker load -i /tmp/image/docker-image.tar || { echo "ERROR: docker load failed"; exit 1; }
           echo "Image loaded successfully"
 
-      - name: Verify image tag
+      - name: Verify image tag exists locally
         run: |
-          docker images slack-backbone:${{ github.sha }} | grep slack-backbone || exit 1
-          echo "Image verified: slack-backbone:${{ github.sha }}"
+          IMAGE="slack-backbone:${{ github.sha }}"
+          if ! docker images "$IMAGE" --format '{{.Repository}}:{{.Tag}}' | grep -q "$IMAGE"; then
+            echo "ERROR: Image $IMAGE not found after load!"
+            docker images -a
+            exit 1
+          fi
+          echo "Image verified locally: $IMAGE"
 
       - name: Smoke test (--help)
         run: |
