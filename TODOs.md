@@ -25,14 +25,19 @@ These items were addressed in PRs and are now on `main`:
 ## 🔍 Notable Gaps
 
 ### 1. `handlers/deploy.go` — Stub
-Returns a static `"🚀 Deploying to **production**..."` message. No real deployment logic yet.
+Parses `--env <value>` but returns a static `"🚀 Deploying to **%s**..."` message. No real deployment logic yet.
 
-**Suggested approach:** Accept an `env` argument, log the intent, and return a structured response indicating which environment would be targeted (e.g., `"deploying to staging"`). A full integration could call a CI/CD webhook or API endpoint.
+**Suggested approach:**
+- Accept an `env` argument (already parsed), log the intent
+- Return a structured response indicating which environment would be targeted
+- Optionally call a CI/CD webhook or API endpoint for real deployments
 
-### 2. `main.go` — Minimal
-Entry point delegates to `cmd.Execute()`. Could benefit from:
-- Graceful shutdown handling (`SIGINT`/`SIGTERM`)
-- Structured logging setup with custom handler (JSON output)
+### 2. `main.go` — Already has graceful shutdown + structured logging ✅
+Entry point already handles:
+- Graceful shutdown via `signal.NotifyContext(SIGINT, SIGTERM)`
+- Structured JSON logging via `slog.NewJSONHandler(os.Stdout, nil)`
+
+**Remaining:** Could add a custom `slog.Handler` with contextual fields (team, version) for richer log output.
 
 ## 📊 Code Stats
 
