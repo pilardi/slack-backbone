@@ -189,3 +189,14 @@ jobs:
       - name: Run container smoke test
         run: |
           timeout 5s docker run --rm slack-backbone:${{ github.sha }} --log-level debug || true
+
+      - name: Save Docker image as tarball
+        run: |
+          docker save -o /tmp/docker-image.tar slack-backbone:${{ github.sha }}
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: slack-backbone-image-${{ github.sha }}
+          path: /tmp/docker-image.tar
+          retention-days: 1
