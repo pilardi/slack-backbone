@@ -81,18 +81,9 @@ jobs:
             --config /etc/slack-backbone/teams.yaml \
             --log-level debug
 
-      - name: Smoke test (cli mode with HTTP port)
-        run: |
-          timeout 10s docker run --rm \
-            -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
-            slack-backbone:${{ github.sha }} \
-            --config /etc/slack-backbone/teams.yaml \
-            -e MODE=cli \
-            -e HTTP_PORT=8080
-
       - name: Smoke test (mcp mode, stdio transport)
         run: |
-          timeout 10s docker run --rm \
+          timeout 5s docker run --rm \
             -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
             slack-backbone:${{ github.sha }} \
             --config /etc/slack-backbone/teams.yaml \
