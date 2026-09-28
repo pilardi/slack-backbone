@@ -26,23 +26,27 @@ jobs:
           go test -coverprofile=combined.out ./... 2>/dev/null || true
 
       - name: Generate badge
-        uses: codecov/coverage-badge-action@v2
         id: badge
-        with:
-          filename: badge-coverage.png
+        run: |
+          COVERAGE=$(go tool cover -func=combined.out | grep 'total:' | awk '{print $3}' | tr -d '%')
+          if [ -z "$COVERAGE" ]; then
+            COVERAGE="0.0"
+          fi
+          # Generate SVG badge using shields.io API (no action needed)
+          ESCAPED=$(echo "$COVERAGE%" | sed 's/%/%25/g')
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
 
-      - name: Commit badge
+      - name: Update README badge
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          git config user.name "goose"
-          git config user.email "goose@berd"
-          git add badge-coverage.png
-          git diff --staged --quiet || exit 0
-          git commit -m "chore: update coverage badge" || true
+          COVERAGE="${{ steps.badge.outputs.coverage }}"
+          ESCAPED=$(echo "$COVERAGE%" | sed 's/%/%25/g')
+          # Update the badge link in README.md
+          sed -i "s|https://img.shields.io/badge/coverage-[0-9.]*%25-brightgreen|https://img.shields.io/badge/coverage-${ESCAPED}-brightgreen|" README.md
 
-      - name: Push badge
+      - name: Commit and push badge update
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
-          commit_message: "chore: update coverage badge"
-          file_pattern: badge-coverage.png
+          commit_message: "chore: update coverage badge to ${{ steps.badge.outputs.coverage }}%"
+          file_pattern: README.md
