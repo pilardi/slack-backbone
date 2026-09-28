@@ -175,6 +175,25 @@ docker build -t slack-backbone:${{ github.sha }} .
 docker run --rm slack-backbone:${{ github.sha }} --log-level debug
 ```
 
+## Testing
+
+| Test | Command |
+|------|---------|
+| Unit tests | `go test ./handlers/... ./mcp/...` |
+| Integration tests | `go test ./integration/...` |
+| Linting | `golangci-lint run` |
+| Build | `go build ./...` |
+
+### Integration Tests (`integration/`)
+
+End-to-end verification of the full command flow:
+
+- **Config → Handler → Slack Client** — verifies handlers receive valid team configs and produce expected block output.
+- **Deploy flow** — tests env validation, channel targeting, default values, and error cases.
+- **Health & Status flows** — verifies handler execution with mock tokens.
+
+Integration tests use mock tokens (`xoxb-mock`, `xapp-mock`) and assert on the returned `*slack.Blocks` structure rather than making real API calls.
+
 ## Acknowledgments
 
 This project was built with the help of several tools and services:
