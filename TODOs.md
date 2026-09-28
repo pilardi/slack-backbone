@@ -14,7 +14,7 @@
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
 | 6 | Add code coverage badge to README | P3 | Small | ✅ Done (PR #18) |
-| 7 | Add `.github/workflows/docker-smoke.yml` for real-token validation | P4 | Medium | ⬜ Open |
+| 7 | Add `.github/workflows/docker-smoke.yml` for real-token validation | P4 | Medium | ✅ Done (PR #20) |
 
 ## 📋 Completed & Merged (on main)
 
