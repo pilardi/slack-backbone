@@ -75,9 +75,10 @@ func run(ctx context.Context) error {
 	}
 
 	slog.Info("all teams listening", "teams", len(cfg.Teams))
-	// Block forever — StartAll is blocking per goroutine, but we want the main
-	// process to stay alive. In practice, a real app would wait on a signal channel.
-	select {}
+	// Block until signal (SIGINT/SIGTERM) — the context is set up in main() to
+	// cancel on signals, so this exits cleanly when the process is terminated.
+	<-ctx.Done()
+	return ctx.Err()
 }
 
 // registerHandlers wires all handlers onto a Bolt app for the given team.
