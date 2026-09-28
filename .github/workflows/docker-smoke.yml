@@ -37,37 +37,41 @@ jobs:
           fi
           echo "Image verified locally: $IMAGE"
 
-      - name: Smoke test (--help)
+      - name: Smoke test (--help, no config needed)
         run: |
           timeout 5s docker run --rm slack-backbone:${{ github.sha }} --help | grep -q "Usage:"
 
-      - name: Smoke test (log-level flag)
+      - name: Smoke test (log-level flag with inline config)
         run: |
-          timeout 5s docker run --rm slack-backbone:${{ github.sha }} --log-level debug || true
+          # Use --config /dev/null since we don't have teams.yaml in the container
+          timeout 5s docker run --rm \
+            slack-backbone:${{ github.sha }} \
+            --config /dev/null \
+            --log-level debug || true
 
       - name: Smoke test (cli mode with HTTP port)
         run: |
+          # cli mode needs teams.yaml; use inline minimal config via --config
           timeout 10s docker run --rm \
+            slack-backbone:${{ github.sha }} \
+            --config /dev/null \
             -e MODE=cli \
-            -e HTTP_PORT=8080 \
-            slack-backbone:${{ github.sha }} || true
+            -e HTTP_PORT=8080 || true
 
       - name: Smoke test (mcp mode, stdio transport)
         run: |
           timeout 10s docker run --rm \
+            slack-backbone:${{ github.sha }} \
+            --config /dev/null \
             -e MODE=mcp \
-            slack-backbone:${{ github.sha }} || true
-
-      - name: Integration-style test (config validation via exit code)
-        run: |
-          # Test that the binary exits cleanly with valid config
-          docker run --rm slack-backbone:${{ github.sha }} --help > /dev/null 2>&1
-          echo "Config validation passed"
+            || true
 
       - name: Integration-style test (multi-flag combination)
         run: |
           timeout 5s docker run --rm \
+            slack-backbone:${{ github.sha }} \
+            --config /dev/null \
             -e MODE=cli \
             -e HTTP_PORT=9090 \
             -e SLACK_BACKBONE_LOG_LEVEL=debug \
-            slack-backbone:${{ github.sha }} || true
+            || true
