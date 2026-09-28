@@ -36,7 +36,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_run' }}
         uses: actions/download-artifact@v5
         with:
-          name: slack-backbone-image-${{ github.sha }}
+          name: slack-backbone-image-${{ github.event.workflow_run.head_sha }}
           path: /tmp/image
           repository: ${{ github.event.workflow_run.repository.full_name }}
           run-id: ${{ github.event.workflow_run.id }}
@@ -50,7 +50,7 @@ jobs:
 
       - name: Verify image tag exists locally
         run: |
-          IMAGE="slack-backbone:${{ github.sha }}"
+          IMAGE="slack-backbone:${{ github.event.workflow_run.head_sha }}"
           if ! docker images "$IMAGE" --format '{{.Repository}}:{{.Tag}}' | grep -q "$IMAGE"; then
             echo "ERROR: Image $IMAGE not found after load!"
             docker images -a
@@ -71,32 +71,37 @@ jobs:
 
       - name: Smoke test (--help, no config needed)
         run: |
-          timeout 5s docker run --rm slack-backbone:${{ github.sha }} --help | grep -q "Usage:"
+          IMAGE="slack-backbone:${{ github.event.workflow_run.head_sha }}"
+          timeout 5s docker run --rm "$IMAGE" --help | grep -q "Usage:"
 
       - name: Smoke test (log-level flag)
         run: |
+          IMAGE="slack-backbone:${{ github.event.workflow_run.head_sha }}"
           timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
-            slack-backbone:${{ github.sha }} \
+            "$IMAGE" \
             --config /etc/slack-backbone/teams.yaml \
             --log-level debug || [ $? -eq 124 ]
 
       - name: Smoke test (cli mode with HTTP port)
         run: |
+          IMAGE="slack-backbone:${{ github.event.workflow_run.head_sha }}"
           timeout 10s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
-            slack-backbone:${{ github.sha }} \
+            "$IMAGE" \
             --config /etc/slack-backbone/teams.yaml \
             --mode cli --http-port 8080 || [ $? -eq 124 ]
 
       - name: Smoke test (mcp mode, stdio transport)
         run: |
+          IMAGE="slack-backbone:${{ github.event.workflow_run.head_sha }}"
           timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
-            slack-backbone:${{ github.sha }} \
+            "$IMAGE" \
             --config /etc/slack-backbone/teams.yaml \
             --mode mcp --http-port 0 || [ $? -eq 124 ]
 
       - name: Integration-style test (multi-flag combination)
         run: |
+          IMAGE="slack-backbone:${{ github.event.workflow_run.head_sha }}"
           timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
-            slack-backbone:${{ github.sha }} \
+            "$IMAGE" \
             --config /etc/slack-backbone/teams.yaml \
             --mode mcp --http-port 0 --log-level debug || [ $? -eq 124 ]
