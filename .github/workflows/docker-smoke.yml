@@ -1,0 +1,102 @@
+name: Docker Smoke Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+jobs:
+  smoke:
+    name: Docker smoke test
+    runs-on: ubuntu-24.04
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Docker Buildx
+        if: ${{ github.event_name != 'workflow_run' }}
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (PR/push path)
+        if: ${{ github.event_name != 'workflow_run' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: slack-backbone:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Download Docker image artifact from CI
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: actions/download-artifact@v5
+        with:
+          name: slack-backbone-image-${{ github.sha }}
+          path: /tmp/image
+          repository: ${{ github.event.workflow_run.repository.full_name }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Load Docker image (workflow_run path)
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: |
+          ls -la /tmp/image/ || { echo "ERROR: artifact directory empty"; exit 1; }
+          docker load -i /tmp/image/docker-image.tar || { echo "ERROR: docker load failed"; exit 1; }
+          echo "Image loaded successfully"
+
+      - name: Verify image tag exists locally
+        run: |
+          IMAGE="slack-backbone:${{ github.sha }}"
+          if ! docker images "$IMAGE" --format '{{.Repository}}:{{.Tag}}' | grep -q "$IMAGE"; then
+            echo "ERROR: Image $IMAGE not found after load!"
+            docker images -a
+            exit 1
+          fi
+          echo "Image verified locally: $IMAGE"
+
+      - name: Create minimal teams.yaml for smoke tests
+        run: |
+          cat > /tmp/teams-smoke.yaml <<'EOF'
+          teams:
+            - name: test-workspace
+              bot_token: xoxb-test-token-12345
+              app_token: xapp-test-app-12345
+              commands: all
+              restricted_commands: []
+          EOF
+
+      - name: Smoke test (--help, no config needed)
+        run: |
+          timeout 5s docker run --rm slack-backbone:${{ github.sha }} --help | grep -q "Usage:"
+
+      - name: Smoke test (log-level flag)
+        run: |
+          timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+            slack-backbone:${{ github.sha }} \
+            --config /etc/slack-backbone/teams.yaml \
+            --log-level debug || [ $? -eq 124 ]
+
+      - name: Smoke test (cli mode with HTTP port)
+        run: |
+          timeout 10s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+            slack-backbone:${{ github.sha }} \
+            --config /etc/slack-backbone/teams.yaml \
+            --mode cli --http-port 8080 || [ $? -eq 124 ]
+
+      - name: Smoke test (mcp mode, stdio transport)
+        run: |
+          timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+            slack-backbone:${{ github.sha }} \
+            --config /etc/slack-backbone/teams.yaml \
+            --mode mcp --http-port 0 || [ $? -eq 124 ]
+
+      - name: Integration-style test (multi-flag combination)
+        run: |
+          timeout 5s docker run --rm -v /tmp/teams-smoke.yaml:/etc/slack-backbone/teams.yaml:ro \
+            slack-backbone:${{ github.sha }} \
+            --config /etc/slack-backbone/teams.yaml \
+            --mode mcp --http-port 0 --log-level debug || [ $? -eq 124 ]

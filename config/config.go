@@ -25,7 +25,7 @@ type Config struct {
 }
 
 // Load reads config from flags, .env files, env vars, and a YAML file.
-func Load() (*Config, error) {
+func Load(cmd *cobra.Command) (*Config, error) {
 	v := viper.New()
 
 	// Set defaults (lowest priority)
@@ -45,7 +45,8 @@ func Load() (*Config, error) {
 	_ = v.BindEnv("config", "CONFIG_FILE")
 
 	// Read the config file if a path was provided (highest priority before defaults)
-	if cfgPath := v.GetString("config"); cfgPath != "" {
+	cfgPath, _ := cmd.Flags().GetString("config")
+	if cfgPath != "" {
 		v.SetConfigFile(cfgPath)
 		if err := v.ReadInConfig(); err != nil {
 			return nil, fmt.Errorf("failed to read config file %q: %w", cfgPath, err)
@@ -62,7 +63,7 @@ func Load() (*Config, error) {
 
 // BindFlags registers config keys with a Cobra command.
 func BindFlags(cmd *cobra.Command) {
-	_ = viper.BindPFlag("log_level", cmd.Flags().Lookup("log-level"))
+	viper.BindPFlags(cmd.Flags())
 }
 
 // Allowed returns true if the command is allowed for this team.

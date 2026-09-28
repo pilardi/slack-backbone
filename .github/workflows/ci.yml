@@ -182,10 +182,18 @@ jobs:
         with:
           context: .
           push: false
+          load: true
           tags: slack-backbone:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Run container smoke test
+      - name: Save Docker image as tarball
         run: |
-          timeout 5s docker run --rm slack-backbone:${{ github.sha }} --log-level debug || true
+          docker save -o /tmp/docker-image.tar slack-backbone:${{ github.sha }}
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: slack-backbone-image-${{ github.sha }}
+          path: /tmp/docker-image.tar
+          retention-days: 1

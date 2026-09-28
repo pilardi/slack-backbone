@@ -13,25 +13,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "slack-backbone",
-	Short: "Multi-team Slack socket-mode app",
-	Long: `A Go application that connects to multiple Slack workspaces
-via socket mode (Bolt), exposes slash commands, and notifies
-channels about events.`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return run(cmd.Context())
-	},
-}
-
-func Execute(ctx context.Context, logger *slog.Logger) error {
-	if err := rootCmd.ExecuteContext(ctx); err != nil {
-		return err
-	}
-	return nil
-}
+var rootCmd *cobra.Command
 
 func init() {
+	rootCmd = &cobra.Command{
+		Use:   "slack-backbone",
+		Short: "Multi-team Slack socket-mode app",
+		Long: `A Go application that connects to multiple Slack workspaces
+via socket mode (Bolt), exposes slash commands, and notifies
+channels about events.`,
+		SilenceUsage: true,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return run(cmd.Context())
+		},
+	}
 	rootCmd.Flags().String("config", "", "Path to teams.yaml config file")
 	rootCmd.Flags().StringP("team", "t", "", "Target a specific team (default: all)")
 	rootCmd.Flags().String("log-level", "info", "Log level: debug|info|warn|error")
@@ -42,8 +37,15 @@ func init() {
 	rootCmd.AddCommand(mcpCmd)
 }
 
+func Execute(ctx context.Context, logger *slog.Logger) error {
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func run(ctx context.Context) error {
-	cfg, err := config.Load()
+	cfg, err := config.Load(rootCmd)
 	if err != nil {
 		return err
 	}
@@ -74,9 +76,10 @@ func run(ctx context.Context) error {
 	}
 
 	slog.Info("all teams listening", "teams", len(cfg.Teams))
-	// Block forever — StartAll is blocking per goroutine, but we want the main
-	// process to stay alive. In practice, a real app would wait on a signal channel.
-	select {}
+	// Block until signal (SIGINT/SIGTERM) — the context is set up in main() to
+	// cancel on signals, so this exits cleanly when the process is terminated.
+	<-ctx.Done()
+	return ctx.Err()
 }
 
 // registerHandlers wires all handlers onto a Bolt app for the given team.
