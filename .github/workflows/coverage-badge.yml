@@ -1,0 +1,48 @@
+name: Coverage Badge
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  badge:
+    name: Generate coverage badge
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+          cache: true
+
+      - name: Run tests with coverage
+        run: |
+          go test -coverprofile=combined.out ./... 2>/dev/null || true
+
+      - name: Generate badge
+        uses: codecov/coverage-badge-action@v2
+        id: badge
+        with:
+          filename: badge-coverage.png
+
+      - name: Commit badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "goose"
+          git config user.email "goose@berd"
+          git add badge-coverage.png
+          git diff --staged --quiet || exit 0
+          git commit -m "chore: update coverage badge" || true
+
+      - name: Push badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore: update coverage badge"
+          file_pattern: badge-coverage.png
