@@ -1,6 +1,6 @@
 # Slack-Backbone — TODOs & Pending Work
 
-*Date: 2026-09-28*
+*Date: 2026-09-29*
 
 ## 🎯 Active Todos (Unmerged)
 
@@ -11,12 +11,13 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 21 | Introduce a `Makefile` build process (build, test, lint, format, docker) | P3 | Medium | ⬜ Open |
+| 22 | Update GitHub Actions CI to use `make` targets (build, test, lint, format, mod-tidy, docker-build) | P3 | Medium | ⬜ Open |
 
 ## 📋 Completed & Merged (on main)
 
 | PR | Title | Status |
 |----|-------|--------|
+| #22 | feat(ci): introduce Makefile build process (build, test, lint, format, docker) + docker-smoke | ✅ Done (PR #22) |
 | #1 | fix(ci): update to Asafrose/bolt-go API and fix type mismatches | ✅ |
 | #2 | chore(ci): update actions to Node.js 24-compatible versions + pin ubuntu-24.04 | ✅ |
 | #3 | feat: implement real health check with Slack API connectivity verification | ✅ |
@@ -66,3 +67,4 @@ Already had graceful shutdown (`signal.NotifyContext`) and structured JSON loggi
 - Config precedence: **CLI flags > env vars > .env.local > .env > teams.yaml > defaults**
 - CI runs 7 jobs: `build`, `test`, `integration`, `coverage`, `lint`, `format`, `mod-tidy`, `docker-build`
 - PR #17 (unmerged) adds the `integration` and `coverage` CI jobs
+- Task 22 will replace hardcoded shell commands in `.github/workflows/ci.yml` with `make` targets, reducing duplication between local dev and CI
