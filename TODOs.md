@@ -11,7 +11,7 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 22 | Update GitHub Actions CI to use `make` targets (build, test, lint, format, mod-tidy, docker-build) | P3 | Medium | ⬜ Open |
+| 22 | Update GitHub Actions CI to use `make` targets (build, test, lint, format, mod-tidy, docker-build) | P3 | Medium | 🔄 In Progress (PR pending review) |
 
 ## 📋 Completed & Merged (on main)
 
