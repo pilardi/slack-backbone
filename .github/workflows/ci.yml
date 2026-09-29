@@ -18,11 +18,8 @@ jobs:
           go-version: "1.25"
           cache: true
 
-      - name: Download dependencies
-        run: go mod download
-
       - name: Build
-        run: go build ./...
+        run: make build
 
   test:
     runs-on: ubuntu-24.04
@@ -35,12 +32,8 @@ jobs:
           go-version: "1.25"
           cache: true
 
-      - name: Run unit tests with coverage
-        run: |
-          go test -v -coverprofile=unit-coverage.out ./handlers/... ./mcp/...
-          echo ""
-          echo "=== Unit Test Coverage ==="
-          go tool cover -func=unit-coverage.out | tail -1
+      - name: Run unit tests
+        run: make test
 
   integration:
     runs-on: ubuntu-24.04
@@ -54,7 +47,7 @@ jobs:
           cache: true
 
       - name: Run integration tests
-        run: go test -v ./integration/...
+        run: make integration
 
   coverage:
     runs-on: ubuntu-24.04
@@ -68,12 +61,8 @@ jobs:
           go-version: "1.25"
           cache: true
 
-      - name: Run all tests with combined coverage
-        run: |
-          go test -v -coverprofile=combined.out ./...
-          echo ""
-          echo "=== Combined Test Coverage ==="
-          go tool cover -func=combined.out | tail -5
+      - name: Run combined coverage
+        run: make coverage
 
   lint:
     runs-on: ubuntu-24.04
@@ -102,13 +91,7 @@ jobs:
           go-version: "1.25"
 
       - name: Check formatting
-        run: |
-          go fmt ./...
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Files are not properly formatted:"
-            git diff
-            exit 1
-          fi
+        run: make format
 
   mod-tidy:
     runs-on: ubuntu-24.04
@@ -121,13 +104,7 @@ jobs:
           go-version: "1.25"
 
       - name: Check go mod tidy
-        run: |
-          go mod tidy
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "go.mod/go.sum out of sync:"
-            git diff
-            exit 1
-          fi
+        run: make mod-tidy
 
   docker-build:
     runs-on: ubuntu-24.04
@@ -154,6 +131,6 @@ jobs:
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v5
         with:
-          name: slack-backbone-image.tar
+          name: slack-backbone-image-${{ github.sha }}
           path: /tmp/docker-image.tar
           retention-days: 1
