@@ -17,7 +17,7 @@
 
 | PR | Title | Status |
 |----|-------|--------|
-| #22 | feat(ci): introduce Makefile build process (build, test, lint, format, docker) + docker-smoke | ✅ Done (PR #22) |
+| #22 | feat(ci): introduce Makefile build process (build, test, lint, format, docker) + docker-smoke | ✅ Done (PR #22) + Docker integration improvements (PR pending review) |
 | #1 | fix(ci): update to Asafrose/bolt-go API and fix type mismatches | ✅ |
 | #2 | chore(ci): update actions to Node.js 24-compatible versions + pin ubuntu-24.04 | ✅ |
 | #3 | feat: implement real health check with Slack API connectivity verification | ✅ |
