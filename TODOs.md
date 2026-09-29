@@ -11,7 +11,7 @@
 
 | # | Task | Priority | Effort | Status |
 |---|------|----------|--------|--------|
-| 23 | Integrate GitHub Actions CI docker-build with local `make docker-smoke` workflow (bridge PR artifacts → local smoke tests) | P3 | Medium | 📝 Draft — needs design |
+| 23 | Integrate GitHub Actions CI docker-build with local `make docker-smoke` workflow (bridge PR artifacts → local smoke tests) | P3 | Medium | 🔄 In Progress (PR pending review) |
 
 ## 📋 Completed & Merged (on main)
 
@@ -69,4 +69,4 @@ Already had graceful shutdown (`signal.NotifyContext`) and structured JSON loggi
 - CI runs 7 jobs: `build`, `test`, `integration`, `coverage`, `lint`, `format`, `mod-tidy`, `docker-build`
 - PR #17 (unmerged) adds the `integration` and `coverage` CI jobs
 - ~~Task 22~~ → **Done** (PR #23 merged). All CI jobs now use `make` targets.
-- Task 23: Bridge GitHub Actions CI docker-build artifacts with local `make docker-smoke` workflow for end-to-end validation.
+- ~~Task 23~~ → **In Progress** (PR pending review). Added `--artifact` flag to `docker-smoke.sh`, new `make docker-smoke-pr` and `make docker-smoke-local` targets.

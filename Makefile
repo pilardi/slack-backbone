@@ -7,7 +7,7 @@ GO ?= go
 COVER ?= unit-coverage.out
 COMBINED_COVER ?= combined.out
 
-.PHONY: help all build test integration coverage lint format fmt-fix mod-tidy docker-build clean
+.PHONY: help all build test integration coverage lint format fmt-fix mod-tidy docker-build docker-smoke docker-smoke-pr docker-smoke-local clean
 
 help: ## Show available targets and their descriptions
 	@echo "Available targets:"
@@ -83,10 +83,31 @@ docker-build: ## Build Docker image (no push, load to local daemon)
 	@echo ""
 	@echo "Image tagged as slack-backbone:$(shell git rev-parse HEAD 2>/dev/null || echo local)"
 
-docker-smoke: docker-build ## Run runtime smoke tests against the Docker image
-	@echo "=== Running Docker smoke tests ==="
+docker-smoke: docker-build ## Run runtime smoke tests against the locally built Docker image
+	@echo "=== Running Docker smoke tests (local image) ==="
 	IMAGE="slack-backbone:$(shell git rev-parse HEAD 2>/dev/null || echo local)" && \
 	bash $(abspath scripts/docker-smoke.sh) "$$IMAGE" "$(abspath smoke-teams.yaml)"
+
+docker-smoke-pr: ## Run smoke tests against the latest PR artifact from GitHub Actions
+	@echo "=== Running Docker smoke tests against PR artifact ==="
+	@TARBALL=$$(mktemp /tmp/docker-image-XXXXXX.tar) && \
+	echo "  Downloading latest PR artifact for SHA $$(git rev-parse HEAD)..." && \
+	gh run download --repo $(shell git remote get-url origin 2>/dev/null || echo pilardi/slack-backbone) \
+	  --name "slack-backbone-image-$$(git rev-parse HEAD)" \
+	  --dir /tmp 2>/dev/null; \
+	LATEST=$$(ls -t /tmp/slack-backbone-image-*.tar 2>/dev/null | head -1) && \
+	if [[ -z "$$LATEST" ]]; then \
+	  echo "  ERROR: No PR artifact found for SHA $$(git rev-parse HEAD)" >&2; \
+	  exit 1; \
+	fi && \
+	echo "  Using artifact: $$LATEST" && \
+	bash $(abspath scripts/docker-smoke.sh) "$$LATEST" "$(abspath smoke-teams.yaml)" --artifact && \
+	rm -f /tmp/slack-backbone-image-*.tar
+
+docker-smoke-local: ## Run smoke tests against a specific tagged image (set DOCKER_IMAGE=...)
+	@echo "=== Running Docker smoke tests (tagged image) ==="
+	bash $(abspath scripts/docker-smoke.sh) "$(DOCKER_IMAGE)" "$(abspath smoke-teams.yaml)" 2>/dev/null || \
+	  echo "  No local image '$(DOCKER_IMAGE)' found." >&2 && exit 1
 
 
 
