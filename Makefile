@@ -83,6 +83,13 @@ docker-build: ## Build Docker image (no push, load to local daemon)
 	@echo ""
 	@echo "Image tagged as slack-backbone:$(shell git rev-parse HEAD 2>/dev/null || echo local)"
 
+docker-smoke: docker-build ## Run runtime smoke tests against the Docker image
+	@echo "=== Running Docker smoke tests ==="
+	IMAGE="slack-backbone:$(shell git rev-parse HEAD 2>/dev/null || echo local)" && \
+	bash $(abspath scripts/docker-smoke.sh) "$$IMAGE" "$(abspath smoke-teams.yaml)"
+
+
+
 # ─── Cleanup ────────────────────────────────────────────────────────────────
 
 clean: ## Remove coverage profiles
